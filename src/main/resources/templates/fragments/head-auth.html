@@ -1,0 +1,14 @@
+<!-- templates/fragments/head-auth.html -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="headAuth(title, extraCss)">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title th:text="${title} ?: 'Internship Tracker'">Internship Tracker</title>
+
+    <!-- Auth-only CSS -->
+    <link rel="stylesheet" href="/css/auth.css" />
+
+    <!-- Optional page css -->
+    <link th:if="${extraCss != null}" rel="stylesheet" th:href="${extraCss}" />
+</head>
+</html>

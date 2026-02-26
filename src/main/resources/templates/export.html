@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Export', '/css/export.css')}"></head>
+
+<body th:class="${themeClass}">
+<div class="app-shell">
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="page">
+
+        <!-- Breadcrumbs -->
+        <div th:if="${breadcrumbs != null}"
+             th:replace="~{fragments/breadcrumb :: breadcrumb(${breadcrumbs})}">
+        </div>
+
+        <div class="page-header">
+            <div>
+                <h2 class="title">Export</h2>
+                <p class="subtitle">Download your internship applications as a CSV file.</p>
+            </div>
+        </div>
+
+        <section class="card">
+            <div class="row">
+                <div>
+                    <div class="label">CSV Export</div>
+                    <div class="muted">Includes non-deleted applications.</div>
+                </div>
+
+                <a class="btn primary" th:href="@{/export/apps.csv}">
+                    Download CSV
+                </a>
+            </div>
+        </section>
+
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,184 @@
+/* --- Layout safety: prevents overlap/overflow in grids --- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+.grid {
+    /* keep your grid as-is, but add this */
+    align-items: start;
+}
+
+.grid > * {
+    min-width: 0; /* CRITICAL: prevents grid items from overflowing and overlapping */
+}
+
+.field {
+    min-width: 0; /* also safe */
+}
+
+.field input,
+.field select,
+.field textarea {
+    box-sizing: border-box; /* ensures padding/border don't exceed 100% width */
+    min-width: 0;
+}
+
+/* Long validation messages shouldn’t break layout */
+.field-error {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+/* Sometimes buttons or links can cause overflow too */
+.actions {
+    flex-wrap: wrap;
+}
+
+
+/* static/css/apps-form.css */
+
+.page {
+    max-width: 980px;
+    margin: 22px auto;
+    padding: 0 18px;
+}
+
+.page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.title { margin: 0 0 6px; }
+.subtitle { margin: 0; opacity: 0.75; }
+
+.card {
+    background: rgba(255,255,255,0.92);
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 800;
+    border: 1px solid rgba(0,0,0,0.12);
+    cursor: pointer;
+    background: transparent;
+    color: inherit;
+}
+
+.btn.primary {
+    background: #111;
+    color: #fff;
+}
+
+.btn.ghost {
+    background: transparent;
+}
+
+.btn:hover { transform: translateY(-1px); }
+
+.banner.warn {
+    margin-bottom: 14px;
+    border-left: 4px solid rgba(176, 0, 32, 0.55);
+}
+
+.banner-title {
+    font-weight: 900;
+    margin-bottom: 2px;
+}
+
+.banner-sub {
+    opacity: 0.85;
+}
+
+.form-error {
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: rgba(176, 0, 32, 0.08);
+    border: 1px solid rgba(176, 0, 32, 0.25);
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.field label {
+    display: block;
+    font-weight: 800;
+    margin-bottom: 6px;
+}
+
+.field input,
+.field select,
+.field textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,0.18);
+    background: rgba(255,255,255,0.9);
+    color: inherit;
+}
+
+.field textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.field-error {
+    margin: 6px 0 0;
+    color: #b00020;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.field.full {
+    grid-column: 1 / -1;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+    justify-content: flex-end;
+}
+
+/* Dark theme tweaks */
+body.theme-dark .card {
+    background: rgba(24, 24, 24, 0.92);
+    border-color: rgba(255,255,255,0.12);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.45);
+}
+
+body.theme-dark .field input,
+body.theme-dark .field select,
+body.theme-dark .field textarea {
+    background: rgba(24,24,24,0.9);
+    border-color: rgba(255,255,255,0.16);
+}
+
+body.theme-dark .btn.primary {
+    background: #f2f2f2;
+    color: #111;
+}
+
+@media (max-width: 860px) {
+    .page-header { flex-direction: column; align-items: stretch; }
+    .grid { grid-template-columns: 1fr; }
+    .actions { justify-content: flex-start; }
+}

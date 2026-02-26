@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('New Application', '/css/apps-form.css')}"></head>
+
+<body th:class="${themeClass}">
+<div class="app-shell">
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="page stack">
+
+  <!-- Breadcrumbs (forms benefit from this) -->
+  <div th:if="${breadcrumbs != null}"
+       th:replace="~{fragments/breadcrumb :: breadcrumb(${breadcrumbs})}">
+  </div>
+
+  <section class="page-header">
+    <div>
+      <h2 class="title">New Application</h2>
+      <p class="subtitle">Add a new internship application.</p>
+    </div>
+    <a class="btn ghost" th:href="@{/apps}">Back</a>
+  </section>
+
+  <!-- Guest warning -->
+  <section th:if="${uiTier == 'GUEST'}" class="card banner warn" role="region" aria-label="Guest mode notice">
+    <div class="banner-title">Guest mode</div>
+    <div class="banner-sub">
+      This application will only be saved for this session.
+      <a th:href="@{/login}">Log in</a> / <a th:href="@{/register}">Register</a> to save permanently.
+    </div>
+  </section>
+
+  <section class="card">
+    <form th:action="@{/apps}" method="post" th:object="${app}">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+      <div th:if="${#fields.hasErrors('*')}" class="form-error">
+        Please fix the errors below.
+      </div>
+
+      <div class="grid">
+        <div class="field">
+          <label for="company">Company</label>
+          <input id="company" type="text" th:field="*{company}" />
+          <div class="field-error" th:if="${#fields.hasErrors('company')}" th:errors="*{company}"></div>
+        </div>
+
+        <div class="field">
+          <label for="role">Role</label>
+          <input id="role" type="text" th:field="*{role}" />
+          <div class="field-error" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></div>
+        </div>
+
+        <div class="field">
+          <label for="location">Location</label>
+          <input id="location" type="text" th:field="*{location}" />
+        </div>
+
+        <div class="field">
+          <label for="status">Status</label>
+          <select id="status" th:field="*{status}">
+            <option value="">Select</option>
+            <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
+          </select>
+          <div class="field-error" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></div>
+        </div>
+
+        <div class="field">
+          <label for="appliedDate">Applied Date</label>
+          <input id="appliedDate" type="date" th:field="*{appliedDate}" />
+          <div class="field-error" th:if="${#fields.hasErrors('appliedDate')}" th:errors="*{appliedDate}"></div>
+        </div>
+
+        <div class="field">
+          <label for="link">Link</label>
+          <input id="link" type="text" th:field="*{link}" />
+        </div>
+
+        <div class="field full">
+          <label for="notes">Notes</label>
+          <textarea id="notes" th:field="*{notes}"></textarea>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a class="btn ghost" th:href="@{/apps}">Cancel</a>
+        <button class="btn primary" type="submit">Save</button>
+      </div>
+
+    </form>
+  </section>
+
+</main>
+</div>
+</body>
+</html>

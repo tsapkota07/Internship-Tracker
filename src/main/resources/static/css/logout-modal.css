@@ -1,0 +1,105 @@
+/* static/css/logout-modal.css */
+
+/* Prevent scroll behind modal */
+body.logout-open {
+    overflow: hidden;
+}
+
+/* Overlay hidden by default */
+.logout-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+
+    background: rgba(0, 0, 0, 0.55);
+    padding: 18px;
+}
+
+/* Show when modal is open */
+body.logout-open .logout-overlay {
+    display: grid;
+    place-items: center;
+}
+
+.logout-card {
+    width: 100%;
+    max-width: 420px;
+    border-radius: 14px;
+    padding: 16px 16px 14px;
+
+    background: var(--card, #ffffff);
+    color: var(--text, #111111);
+    border: 1px solid var(--border, rgba(0,0,0,0.10));
+    box-shadow: 0 18px 60px rgba(0,0,0,0.35);
+}
+
+.logout-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.logout-card h2 {
+    margin: 0;
+    font-size: 1.15rem;
+}
+
+.logout-text {
+    margin: 10px 0 14px;
+    color: var(--muted, #666);
+    line-height: 1.4;
+}
+
+.logout-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+/* Buttons inside modal */
+.logout-card .btn {
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--border, rgba(0,0,0,0.12));
+    background: var(--card, #fff);
+    color: var(--text, #111);
+}
+
+.logout-card .btn.ghost {
+    background: transparent;
+}
+
+.logout-card .btn.ghost:hover {
+    background: rgba(127, 127, 127, 0.12);
+}
+
+.logout-card .btn.danger {
+    border-color: rgba(220, 38, 38, 0.55);
+    background: rgba(220, 38, 38, 0.12);
+    color: rgb(185, 28, 28);
+}
+
+.logout-card .btn.danger:hover {
+    background: rgba(220, 38, 38, 0.18);
+}
+
+/* ✅ Wrapper-based blur + click-block behind modal */
+body.logout-open .app-shell {
+    filter: blur(6px);
+    transform: translateZ(0); /* reduces blur flicker */
+    pointer-events: none;     /* prevents clicking behind modal */
+}
+
+/* Optional: add a subtle extra darkening behind the blur */
+body.logout-open .app-shell::after {
+    content: "";
+    position: fixed;      /* cover the viewport */
+    inset: 0;
+    background: rgba(0,0,0,0.10);
+    pointer-events: none;
+}

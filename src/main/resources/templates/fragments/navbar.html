@@ -1,0 +1,85 @@
+<!-- templates/fragments/navbar.html -->
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="navbar">
+
+    <header class="navbar">
+        <div class="navbar-inner">
+            <a class="brand" th:href="@{/apps}">Internship Tracker</a>
+
+            <div class="navbar-right">
+
+                <!-- Guest -->
+                <div th:if="${uiTier == 'GUEST'}"
+                     style="display:flex; gap:10px; align-items:center;">
+                    <a class="nav-link" th:href="@{/login}">Login</a>
+                    <a class="nav-link" th:href="@{/register}">Register</a>
+                </div>
+
+                <!-- Logged in (BASIC_USER or EMAIL_USER) -->
+                <div th:if="${uiTier != 'GUEST'}" class="profile-wrap" id="profileWrap">
+                    <button type="button"
+                            class="profile-btn"
+                            id="profileBtn"
+                            aria-haspopup="true"
+                            aria-expanded="false">
+                        <i class="fa-solid fa-user"></i>
+                        <span th:text="${username}">username</span>
+
+                        <!-- Email not verified indicator (BASIC_USER only) -->
+                        <span th:if="${uiTier == 'BASIC_USER'}"
+                              title="Email not verified"
+                              style="margin-left:6px;">⚠️</span>
+
+                        <span style="opacity:0.7;">▾</span>
+                    </button>
+
+                    <div class="dropdown" id="profileDropdown" role="menu" aria-label="Account menu">
+                        <a th:href="@{/apps/deleted}" role="menuitem">🗑️ View Deleted</a>
+                        <a th:href="@{/account}" role="menuitem">⚙ Account Settings</a>
+
+                        <!-- Best experience: verified email users -->
+                        <th:block th:if="${uiTier == 'EMAIL_USER'}">
+                            <a th:href="@{/preferences}" role="menuitem">🎛 Preferences</a>
+                            <a th:href="@{/export}" role="menuitem">📤 Export Data</a>
+                        </th:block>
+
+                        <!-- Basic user: push them to set up / verify email -->
+                        <a th:if="${uiTier == 'BASIC_USER'}"
+                           th:href="@{/account/email}"
+                           role="menuitem">
+                            ‼️Email Setup
+                        </a>
+
+                        <div class="divider"></div>
+
+                        <a href="#" class="danger" role="menuitem" onclick="openLogoutModal(); return false;">
+                            🚪 Log out
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+
+    <!-- Include modal ONCE -->
+    <div th:replace="~{fragments/logout-modal :: logoutModal}"></div>
+
+    <script>
+        (function () {
+            const wrap = document.getElementById("profileWrap");
+            const btn = document.getElementById("profileBtn");
+            const dropdown = document.getElementById("profileDropdown");
+            if (!wrap || !btn || !dropdown) return;
+
+            function open() { wrap.classList.add("open"); btn.setAttribute("aria-expanded", "true"); }
+            function close() { wrap.classList.remove("open"); btn.setAttribute("aria-expanded", "false"); }
+            function toggle() { wrap.classList.contains("open") ? close() : open(); }
+
+            btn.addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); toggle(); });
+            document.addEventListener("click", () => close());
+            document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); }, true);
+        })();
+    </script>
+
+</div>

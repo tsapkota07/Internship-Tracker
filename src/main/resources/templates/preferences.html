@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Preferences', '/css/preferences.css')}"></head>
+
+<body th:class="${themeClass}">
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="page">
+
+    <div th:if="${breadcrumbs != null}"
+         th:replace="~{fragments/breadcrumb :: breadcrumb(${breadcrumbs})}">
+    </div>
+
+    <div class="page-header">
+        <div>
+            <h2 class="title">Preferences</h2>
+            <p class="subtitle">Customize how the app looks for you.</p>
+        </div>
+        <a class="btn ghost" th:href="@{/apps}">← Back</a>
+    </div>
+
+    <section th:if="${param.saved}" class="card" style="margin-bottom:14px;">
+        <div style="font-weight:800;">✅ Saved!</div>
+        <div style="opacity:0.75; margin-top:6px;">Your preferences have been updated.</div>
+    </section>
+
+    <section class="card">
+        <form th:action="@{/preferences}" method="post" th:object="${form}">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+            <div class="field" style="max-width:360px;">
+                <label for="theme">Theme</label>
+                <select id="theme" th:field="*{theme}">
+                    <option th:value="LIGHT">Light</option>
+                    <option th:value="DARK">Dark</option>
+                </select>
+            </div>
+
+            <div class="actions">
+                <button class="btn primary" type="submit">Save</button>
+                <a class="btn ghost" th:href="@{/apps}">Cancel</a>
+            </div>
+        </form>
+    </section>
+
+</main>
+</body>
+</html>

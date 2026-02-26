@@ -1,0 +1,210 @@
+/* static/css/account.css */
+
+.page {
+    max-width: 920px;
+    margin: 28px auto;
+    padding: 0 16px 40px;
+}
+
+.page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.page-title {
+    margin: 0;
+    font-size: 1.7rem;
+    letter-spacing: -0.02em;
+}
+
+.page-sub {
+    margin: 6px 0 0;
+    opacity: 0.75;
+    line-height: 1.35;
+}
+
+/* Card */
+.card {
+    border: 1px solid rgba(0,0,0,0.10);
+    border-radius: 16px;
+    background: rgba(255,255,255,0.9);
+    box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+    padding: 18px;
+}
+
+body.theme-dark .card {
+    background: rgba(18,18,18,0.85);
+    border-color: rgba(255,255,255,0.12);
+    box-shadow: 0 14px 45px rgba(0,0,0,0.35);
+}
+
+.divider {
+    height: 1px;
+    background: rgba(0,0,0,0.08);
+    margin: 16px 0;
+}
+body.theme-dark .divider {
+    background: rgba(255,255,255,0.12);
+}
+
+/* Key/value row */
+.kv {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+@media (max-width: 680px) {
+    .kv { grid-template-columns: 1fr; }
+}
+
+.muted {
+    opacity: 0.70;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+}
+
+.value {
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+
+/* Pills */
+.pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border: 1px solid rgba(0,0,0,0.10);
+    background: rgba(0,0,0,0.03);
+}
+
+body.theme-dark .pill {
+    border-color: rgba(255,255,255,0.14);
+    background: rgba(255,255,255,0.06);
+}
+
+.pill.good { background: rgba(46, 204, 113, 0.12); border-color: rgba(46, 204, 113, 0.25); }
+.pill.bad { background: rgba(231, 76, 60, 0.12); border-color: rgba(231, 76, 60, 0.25); }
+.pill.neutral { background: rgba(52, 152, 219, 0.10); border-color: rgba(52, 152, 219, 0.22); }
+
+/* Banners */
+.banner {
+    border-radius: 12px;
+    padding: 12px 12px;
+    border: 1px solid rgba(0,0,0,0.12);
+    margin-bottom: 12px;
+}
+
+body.theme-dark .banner {
+    border-color: rgba(255,255,255,0.14);
+}
+
+.banner.info { background: rgba(52, 152, 219, 0.10); }
+.banner.warn { background: rgba(241, 196, 15, 0.14); }
+.banner.error { background: rgba(231, 76, 60, 0.12); }
+.banner.success { background: rgba(46, 204, 113, 0.12); }
+
+/* Form */
+.form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+label {
+    font-weight: 700;
+    font-size: 0.95rem;
+    opacity: 0.9;
+}
+
+.input {
+    width: 100%;
+    border-radius: 12px;
+    padding: 11px 12px;
+    border: 1px solid rgba(0,0,0,0.14);
+    background: rgba(255,255,255,0.95);
+    outline: none;
+}
+
+body.theme-dark .input {
+    background: rgba(20,20,20,0.85);
+    border-color: rgba(255,255,255,0.15);
+    color: #f2f2f2;
+}
+
+.input:focus {
+    border-color: rgba(52,152,219,0.55);
+    box-shadow: 0 0 0 4px rgba(52,152,219,0.12);
+}
+
+.error-text {
+    color: #b00020;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Buttons (works alongside your existing .btn in logout modal too) */
+.actions-row {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 14px;
+    flex-wrap: wrap;
+}
+
+.btnx {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.14);
+    background: rgba(0,0,0,0.04);
+    cursor: pointer;
+    font-weight: 800;
+    text-decoration: none;
+    color: inherit;
+}
+
+body.theme-dark .btnx {
+    border-color: rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.06);
+}
+
+.btnx:hover { transform: translateY(-1px); }
+.btnx.primary {
+    background: #121212;
+    color: white;
+}
+body.theme-dark .btnx.primary {
+    background: #f2f2f2;
+    color: #111;
+}
+
+.btnx.danger {
+    background: rgba(231, 76, 60, 0.14);
+    border-color: rgba(231, 76, 60, 0.28);
+}
+
+/* Danger zone wrapper */
+.danger-zone {
+    border: 1px solid rgba(231, 76, 60, 0.25);
+    background: rgba(231, 76, 60, 0.06);
+}
+
+body.theme-dark .danger-zone {
+    background: rgba(231, 76, 60, 0.10);
+    border-color: rgba(231, 76, 60, 0.25);
+}
+
+.danger-title {
+    margin: 0 0 4px;
+}

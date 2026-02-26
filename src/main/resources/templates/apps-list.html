@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Applications', '/css/apps-list.css')}"></head>
+
+<body th:class="${themeClass}">
+<div class="app-shell">
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="page stack">
+
+    <!-- Header -->
+    <section class="page-header">
+        <div>
+            <h2 class="title">Applications</h2>
+            <p class="subtitle">Track, filter, and manage your internship applications.</p>
+        </div>
+
+        <a class="btn primary" th:href="@{/apps/new}">+ Add Application</a>
+    </section>
+
+    <!-- Import banner (logged in + guest apps exist) -->
+    <!-- If you want to restrict this to EMAIL_USER only, change condition to: ${uiTier == 'EMAIL_USER' and showImportBanner} -->
+    <section th:if="${showImportBanner}" class="card banner" role="region" aria-label="Import guest applications">
+        <div class="banner-left">
+            <div class="banner-title">
+                You have <span th:text="${guestAppsCount}">0</span> guest application(s).
+            </div>
+            <div class="banner-sub">Do you want to import them into your account?</div>
+        </div>
+
+        <div class="banner-actions">
+            <a th:if="${guestAppsCount >= 2}"
+               class="btn ghost"
+               th:href="@{/apps/import-select}">
+                Choose Items
+            </a>
+
+            <form th:action="@{/apps/import-guest}" method="post" style="margin:0;">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <button class="btn primary" type="submit">Import All</button>
+            </form>
+
+            <form th:action="@{/apps/import-dismiss}" method="post" style="margin:0;">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <button class="btn danger" type="submit">Discard All</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Stats (only when no filters active) -->
+    <section th:if="${!filtersActive}" class="card stats" role="region" aria-label="Application stats">
+        <div class="stat">
+            <div class="stat-label">Total</div>
+            <div class="stat-value" th:text="${totalCount ?: 0}">0</div>
+        </div>
+        <div class="stat">
+            <div class="stat-label">Applied</div>
+            <div class="stat-value" th:text="${appliedCount ?: 0}">0</div>
+        </div>
+        <div class="stat">
+            <div class="stat-label">Interview</div>
+            <div class="stat-value" th:text="${interviewCount ?: 0}">0</div>
+        </div>
+        <div class="stat">
+            <div class="stat-label">Offer</div>
+            <div class="stat-value" th:text="${offerCount ?: 0}">0</div>
+        </div>
+        <div class="stat">
+            <div class="stat-label">Rejected</div>
+            <div class="stat-value" th:text="${rejectedCount ?: 0}">0</div>
+        </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="card" role="region" aria-label="Filters">
+        <form class="filters" method="get" th:action="@{/apps}">
+            <div class="field">
+                <label for="q">Search</label>
+                <input id="q"
+                       type="text"
+                       name="q"
+                       placeholder="Company or role"
+                       th:value="${q}">
+            </div>
+
+            <div class="field">
+                <label for="status">Status</label>
+                <select id="status" name="status">
+                    <option value="" th:selected="${status == null}">All</option>
+                    <option value="APPLIED" th:selected="${status?.name() == 'APPLIED'}">Applied</option>
+                    <option value="INTERVIEW" th:selected="${status?.name() == 'INTERVIEW'}">Interview</option>
+                    <option value="OFFER" th:selected="${status?.name() == 'OFFER'}">Offer</option>
+                    <option value="REJECTED" th:selected="${status?.name() == 'REJECTED'}">Rejected</option>
+                </select>
+            </div>
+
+            <div class="filter-actions">
+                <button class="btn primary" type="submit">Filter</button>
+                <a class="btn ghost" th:href="@{/apps}" th:if="${filtersActive}">Clear</a>
+            </div>
+        </form>
+    </section>
+
+    <!-- Empty state -->
+    <section th:if="${#lists.isEmpty(apps)}" class="card empty" role="region" aria-label="Empty state">
+        <div class="empty-title" th:if="${(q != null and !q.isBlank()) or status != null}">
+            No results found.
+        </div>
+        <div class="empty-title" th:unless="${(q != null and !q.isBlank()) or status != null}">
+            No applications yet.
+        </div>
+
+        <div class="empty-sub">
+            Try adjusting your filters, or add your first application.
+        </div>
+
+        <a class="btn primary" th:href="@{/apps/new}">+ Add Application</a>
+    </section>
+
+    <!-- List -->
+    <section th:if="${!#lists.isEmpty(apps)}" class="list" role="region" aria-label="Applications list">
+        <div class="app-row card" th:each="app : ${apps}">
+            <div class="app-main">
+                <div class="app-title">
+                    <span class="company" th:text="${app.company}">Company</span>
+                    <span class="dot" aria-hidden="true">•</span>
+                    <span class="role" th:text="${app.role}">Role</span>
+                </div>
+
+<!--                <div class="app-meta">-->
+<!--                    <span class="pill" th:text="${app.status}">STATUS</span>-->
+<!--                </div>-->
+                <div class="app-meta">
+    <span class="pill"
+          th:classappend="${app.status != null ? 'status-' + #strings.toLowerCase(app.status) : ''}"
+          th:text="${app.status}">STATUS</span>
+                </div>
+            </div>
+
+            <div class="app-actions">
+                <a class="btn ghost" th:href="@{/apps/{id}/edit(id=${app.id})}">Edit</a>
+
+                <form th:action="@{/apps/{id}/delete(id=${app.id})}" method="post" style="margin:0;">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <button class="btn danger" type="submit">Delete</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+</main>
+</div>
+</body>
+</html>

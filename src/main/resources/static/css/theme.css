@@ -1,0 +1,61 @@
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+/* Default variables (light) */
+.theme-light {
+    --bg: #ffffff;
+    --text: #111827;
+    --muted: #6b7280;
+    --card: #f9fafb;
+    --border: #e5e7eb;
+    --link: #2563eb;
+    --btn-bg: #111827;
+    --btn-text: #ffffff;
+}
+
+/* Dark mode variables */
+.theme-dark {
+    --bg: #0b1220;
+    --text: #e5e7eb;
+    --muted: #94a3b8;
+    --card: #111827;
+    --border: #243041;
+    --link: #60a5fa;
+    --btn-bg: #e5e7eb;
+    --btn-text: #111827;
+}
+
+/* Apply variables */
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    margin: 0; /* ✅ instead of 16px */
+}
+
+a { color: var(--link); }
+
+hr { border: none; border-top: 1px solid var(--border); }
+
+input, select, textarea {
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 8px;
+    border-radius: 6px;
+}
+
+button {
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+details > div {
+    background: var(--card);
+    border: 1px solid var(--border);
+}

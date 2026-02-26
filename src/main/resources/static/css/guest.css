@@ -1,0 +1,89 @@
+/* =========================
+   Guest mode: plain & boring
+   ========================= */
+
+.guest {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #ffffff;
+    color: #000;
+    margin: 0;
+    padding: 16px;
+}
+
+/* Headings */
+.guest h1,
+.guest h2,
+.guest h3 {
+    margin: 12px 0;
+    font-weight: normal;
+}
+
+/* Links */
+.guest a {
+    color: #0000ee;
+    text-decoration: underline;
+}
+
+/* Forms */
+.guest form {
+    margin: 12px 0;
+}
+
+/* Labels */
+.guest label {
+    display: block;
+    margin: 8px 0 4px;
+    font-size: 14px;
+}
+
+/* Inputs */
+.guest input[type="text"],
+.guest input[type="url"],
+.guest input[type="date"],
+.guest input[type="password"],
+.guest select,
+.guest textarea {
+    width: 100%;
+    max-width: 500px;
+    padding: 6px;
+    border: 1px solid #000;
+    background: #fff;
+    color: #000;
+    font-size: 14px;
+}
+
+/* Focus */
+.guest input:focus,
+.guest select:focus,
+.guest textarea:focus {
+    outline: 1px solid #000;
+}
+
+/* Buttons */
+.guest button {
+    margin-top: 8px;
+    padding: 6px 10px;
+    font-size: 14px;
+    border: 1px solid #000;
+    background: #eee;
+    color: #000;
+    cursor: pointer;
+}
+
+.guest button:hover {
+    background: #ddd;
+}
+
+/* Lists */
+.guest ul {
+    padding-left: 20px;
+}
+
+.guest li {
+    margin: 6px 0;
+}
+
+/* Danger actions (delete) */
+.guest form button[type="submit"] {
+    background: #eee;
+}

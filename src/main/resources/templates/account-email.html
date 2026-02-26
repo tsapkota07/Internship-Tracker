@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Account Email', '/css/email-page.css')}"></head>
+
+<body th:class="${themeClass}">
+<div class="app-shell">
+
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="page page-wrap"
+          th:with="
+          isVerified=${user.emailVerified},
+          hasEmail=${user.email != null and !#strings.isEmpty(user.email)},
+          hasPending=${user.pendingEmail != null and !#strings.isEmpty(user.pendingEmail)}
+        ">
+
+        <div th:if="${breadcrumbs != null}"
+             th:replace="~{fragments/breadcrumb :: breadcrumb(${breadcrumbs})}">
+        </div>
+
+        <div class="top-row">
+            <div>
+                <h2 class="page-title">Account Email</h2>
+                <p class="page-sub">Manage your email and verification status.</p>
+            </div>
+
+            <a class="back-link" th:href="@{/account}">← Back</a>
+        </div>
+
+        <div class="card">
+
+            <!-- Error -->
+            <div th:if="${error != null and !#strings.isEmpty(error)}" class="banner error">
+                <strong>Something went wrong:</strong>
+                <span th:text="${error}">Error</span>
+            </div>
+
+            <!-- Status banners -->
+            <div th:if="${param.verified != null}" class="banner success">
+                ✅ Your email is verified.
+            </div>
+
+            <div th:if="${param.sent != null}" class="banner info">
+                ✅ If the email is correct, check your inbox (and spam/junk) for the verification link.
+            </div>
+
+            <div th:if="${param.pending != null}" class="banner info">
+                ✅ We sent a confirmation link to your new email. Please confirm it to finish changing your email.
+            </div>
+
+            <div th:if="${param.cancelled != null}" class="banner info">
+                ✅ Pending email change cancelled.
+            </div>
+
+            <div th:if="${user.demoUser}" class="banner info">
+                <strong>Demo account:</strong> Email changes are disabled for demo users.
+            </div>
+
+            <!-- Pending (ONLY meaningful for verified users) -->
+            <div th:if="${isVerified and hasPending}" class="banner info">
+                <strong>Pending email:</strong>
+                <span th:text="${user.pendingEmail}">pending@example.com</span>
+
+                <div style="margin-top:6px;">
+                    Your current email stays active until the new one is confirmed.
+                </div>
+
+                <div class="actions" style="margin-top:10px;">
+                    <!-- Resend confirmation by re-posting pending email -->
+                    <form th:action="@{/account/email}" method="post" style="margin:0;">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <input type="hidden" name="email" th:value="${user.pendingEmail}" />
+                        <button class="btn secondary" type="submit">Resend confirmation</button>
+                    </form>
+
+                    <!-- Cancel pending -->
+                    <form th:action="@{/account/email/cancel-pending}" method="post" style="margin:0;">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <button class="btn ghost" type="submit">Cancel change</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Current email + status (shown once) -->
+            <div class="section kv">
+                <div>
+                    <div class="muted">Current email</div>
+                    <div class="value" th:text="${hasEmail ? user.email : 'None'}">None</div>
+                </div>
+
+                <div>
+                    <div class="muted" style="margin-bottom: 6px;">Status</div>
+
+                    <span th:if="${!hasEmail}" class="pill neutral">No email on file</span>
+                    <span th:if="${hasEmail and isVerified}" class="pill good">Verified</span>
+                    <span th:if="${hasEmail and !isVerified}" class="pill bad">⚠️ Not verified</span>
+                </div>
+            </div>
+
+            <!-- Guidance for unverified -->
+            <div th:if="${hasEmail and !isVerified}" class="banner warn">
+                We sent a verification link to <strong th:text="${user.email}">your email</strong>.
+                If that email is wrong, enter a different one below — we’ll replace it and send a new link.
+            </div>
+
+            <!-- Guidance for verified (no pending) -->
+            <div th:if="${isVerified and !hasPending}" class="banner info">
+                Want to change your email? Enter a new one below. We’ll send a confirmation link to the new email.
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Email form -->
+            <form th:action="@{/account/email}" method="post" th:object="${form}">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                <div class="form-row">
+                    <label for="email"
+                           th:text="${!hasEmail ? 'Add email'
+                          : (!isVerified ? 'Use a different email'
+                          : 'Change email')}">
+                        Email
+                    </label>
+
+                    <!-- Small helper text -->
+                    <div class="muted" th:if="${!hasEmail}" style="margin-top:-2px;">
+                        We’ll send a verification link to this email.
+                    </div>
+                    <div class="muted" th:if="${hasEmail and !isVerified}" style="margin-top:-2px;">
+                        This will replace your current email immediately (since it isn’t verified yet).
+                    </div>
+                    <div class="muted" th:if="${isVerified}" style="margin-top:-2px;">
+                        Your current email stays active until the new email is confirmed.
+                    </div>
+
+                    <input id="email"
+                           class="input"
+                           type="email"
+                           th:field="*{email}"
+                           placeholder="you@example.com"
+                           autocomplete="email" />
+
+                    <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-text"></p>
+                </div>
+
+                <div class="actions">
+                    <button class="btn primary" type="submit"
+                            th:text="${!hasEmail ? 'Save & send verification'
+                           : (!isVerified ? 'Send verification to this email'
+                           : 'Send confirmation to new email')}">
+                        Save
+                    </button>
+                </div>
+            </form>
+
+            <!-- Resend verification ONLY for unverified current email -->
+            <div th:if="${hasEmail and !isVerified}" class="section">
+                <form method="post" th:action="@{/account/verify-email/resend}">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <button class="btn secondary" type="submit">Resend verification email</button>
+                </form>
+            </div>
+
+        </div>
+    </main>
+
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const isVerified = /*[[${user.emailVerified}]]*/ false;
+    const hasEmail = /*[[${user.email != null}]]*/ false;
+
+    const sent = /*[[${param.sent != null}]]*/ false;
+    const pending = /*[[${param.pending != null}]]*/ false;
+
+    // Poll lightly so the page updates after user clicks the email link and returns.
+    // (It won't "verify" without the user clicking the link, but it refreshes the UI if they did.)
+    if ((sent && hasEmail && !isVerified) || (pending && isVerified)) {
+        const interval = setInterval(async () => {
+            try {
+                const res = await fetch('/account/email/status', { cache: 'no-store' });
+                if (!res.ok) return;
+
+                const data = await res.json();
+
+                // If user became verified, refresh into verified view
+                if (data.emailVerified) {
+                    clearInterval(interval);
+                    window.location.href = '/account/email?verified=1';
+                    return;
+                }
+
+                // If pending email was cleared (confirmed or cancelled), refresh
+                if (pending && (!data.pendingEmail || data.pendingEmail.trim() === "")) {
+                    clearInterval(interval);
+                    window.location.href = '/account/email';
+                }
+
+            } catch (e) { }
+        }, 2500);
+    }
+    /*]]>*/
+</script>
+
+</body>
+</html>

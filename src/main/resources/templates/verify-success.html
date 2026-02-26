@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head-auth :: headAuth('Email verified', null)}"></head>
+
+<body class="auth">
+<div class="box">
+    <h1>Email verified</h1>
+
+    <p class="success">
+        ✅ Your email has been verified successfully.
+    </p>
+
+    <p class="muted">
+        You can close this tab and go back to the app.
+    </p>
+
+<!--    <div style="margin-top:16px;">-->
+<!--        <a th:href="@{/login}">Go to login</a>-->
+<!--        <span class="muted"> · </span>-->
+<!--        <a th:href="@{/apps}">Go to applications</a>-->
+<!--    </div>-->
+</div>
+</body>
+</html>

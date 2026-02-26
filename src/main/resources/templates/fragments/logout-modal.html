@@ -1,0 +1,61 @@
+<!-- templates/fragments/logout-modal.html -->
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="logoutModal">
+    <div id="logoutOverlay" class="logout-overlay" aria-hidden="true">
+        <div class="logout-card" role="dialog" aria-modal="true" aria-labelledby="logoutTitle">
+            <div class="logout-header">
+                <h2 id="logoutTitle">Log out</h2>
+            </div>
+
+            <p class="logout-text">Are you sure you want to log out?</p>
+
+            <div class="logout-actions">
+                <form th:action="@{/logout}" method="post" style="margin:0;">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <button class="btn danger" type="submit">Yes, log me out</button>
+                </form>
+
+                <button type="button" class="btn ghost" id="logoutCancelBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const overlay = document.getElementById("logoutOverlay");
+            const cancelBtn = document.getElementById("logoutCancelBtn");
+            if (!overlay) return;
+
+            if (overlay.parentElement !== document.body) {
+                document.body.appendChild(overlay);
+            }
+
+            function openLogoutModal() {
+                document.body.classList.add("logout-open");
+                overlay.setAttribute("aria-hidden", "false");
+                setTimeout(() => cancelBtn && cancelBtn.focus(), 0);
+            }
+
+            function closeLogoutModal() {
+                document.body.classList.remove("logout-open");
+                overlay.setAttribute("aria-hidden", "true");
+            }
+
+            overlay.addEventListener("click", (e) => {
+                if (e.target === overlay) closeLogoutModal();
+            });
+
+            cancelBtn && cancelBtn.addEventListener("click", closeLogoutModal);
+
+            document.addEventListener("keydown", (e) => {
+                if (e.key !== "Escape") return;
+                if (!document.body.classList.contains("logout-open")) return;
+                e.stopImmediatePropagation();
+                e.preventDefault();
+                closeLogoutModal();
+            }, true);
+
+            window.openLogoutModal = openLogoutModal;
+            window.closeLogoutModal = closeLogoutModal;
+        })();
+    </script>
+</div>

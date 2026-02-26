@@ -1,0 +1,33 @@
+<!-- templates/fragments/breadcrumb.html -->
+<nav xmlns:th="http://www.thymeleaf.org"
+     th:fragment="breadcrumb(items)"
+     class="breadcrumb"
+     aria-label="Breadcrumb"
+     th:if="${items != null and !#lists.isEmpty(items)}">
+
+    <ol>
+        <li th:each="item, iter : ${items}">
+            <!-- Last item: plain text + aria-current -->
+            <span th:if="${iter.last}"
+                  class="current"
+                  aria-current="page"
+                  th:text="${item.label}">
+                Current
+            </span>
+
+            <!-- Non-last: link if url present, else plain text -->
+            <th:block th:unless="${iter.last}">
+                <a th:if="${item.url != null and !#strings.isEmpty(item.url)}"
+                   th:href="${item.url}"
+                   th:text="${item.label}">
+                    Link
+                </a>
+
+                <span th:unless="${item.url != null and !#strings.isEmpty(item.url)}"
+                      th:text="${item.label}">
+                    Text
+                </span>
+            </th:block>
+        </li>
+    </ol>
+</nav>

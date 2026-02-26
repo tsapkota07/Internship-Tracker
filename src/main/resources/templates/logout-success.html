@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head-auth :: headAuth('Signed out', null)}"></head>
+
+<body class="auth">
+<div class="box">
+    <h1>You’re signed out</h1>
+
+    <p class="success">
+        ✅ You have been logged out successfully.
+    </p>
+
+    <div style="margin-top:16px;">
+        <a th:href="@{/login}">Log in again</a>
+        <span class="muted"> · </span>
+        <a th:href="@{/apps}">Continue as guest</a>
+    </div>
+</div>
+</body>
+</html>

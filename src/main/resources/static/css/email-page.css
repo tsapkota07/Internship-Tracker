@@ -1,0 +1,280 @@
+/* ===============================
+   Account Email Page Styles
+   Theme-friendly (uses theme.css vars)
+   =============================== */
+
+.page-wrap {
+    max-width: 760px;
+    margin: 28px auto;
+    padding: 0 16px;
+}
+
+.page-title {
+    margin: 0 0 6px;
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--text, #111);
+}
+
+.page-sub {
+    margin: 0 0 16px;
+    color: var(--muted, #666);
+    font-size: 14px;
+}
+
+/* Card */
+.card {
+    background: var(--card, #fff);
+    color: var(--text, #111);
+    border: 1px solid var(--border, rgba(0,0,0,0.10));
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+}
+
+/* Header row */
+.top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.back-link {
+    text-decoration: none;
+    color: var(--link, #2563eb);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+/* Banners */
+.banner {
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 14px;
+    border: 1px solid transparent;
+    margin: 12px 0;
+    line-height: 1.35;
+}
+
+.banner.warn {
+    background: rgba(245, 158, 11, 0.12);
+    border-color: rgba(245, 158, 11, 0.30);
+}
+
+.banner.info {
+    background: rgba(59, 130, 246, 0.10);
+    border-color: rgba(59, 130, 246, 0.25);
+}
+
+.banner.success {
+    background: rgba(16, 185, 129, 0.12);
+    border-color: rgba(16, 185, 129, 0.28);
+}
+
+.banner.error {
+    background: rgba(220, 38, 38, 0.10);
+    border-color: rgba(220, 38, 38, 0.25);
+}
+
+/* Sections */
+.section {
+    margin-top: 14px;
+}
+
+.divider {
+    height: 1px;
+    background: var(--border, rgba(0,0,0,0.12));
+    margin: 16px 0;
+    opacity: 0.9;
+}
+
+/* Key-value row */
+.kv {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: center;
+}
+
+.muted {
+    color: var(--muted, #666);
+    font-size: 13px;
+}
+
+.value {
+    font-weight: 800;
+    color: var(--text, #111);
+    word-break: break-word;
+}
+
+/* Status pills */
+.pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border, rgba(0,0,0,0.12));
+    font-size: 13px;
+    white-space: nowrap;
+    background: rgba(127, 127, 127, 0.08);
+}
+
+.pill.good {
+    background: rgba(16, 185, 129, 0.12);
+    border-color: rgba(16, 185, 129, 0.30);
+}
+
+.pill.bad {
+    background: rgba(245, 158, 11, 0.12);
+    border-color: rgba(245, 158, 11, 0.30);
+}
+
+.pill.neutral {
+    background: rgba(127, 127, 127, 0.08);
+}
+
+/* Form */
+.form-row {
+    display: grid;
+    gap: 8px;
+}
+
+label {
+    font-weight: 700;
+    color: var(--text, #111);
+}
+
+.input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border, rgba(0,0,0,0.15));
+    border-radius: 12px;
+    font-size: 14px;
+    background: var(--card, #fff);
+    color: var(--text, #111);
+}
+
+.input:focus {
+    outline: none;
+    border-color: rgba(59, 130, 246, 0.55);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+}
+
+/* Shared actions row (also used inside banners for pending) */
+.actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+/* Buttons */
+.btn {
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border, rgba(0,0,0,0.18));
+    font-weight: 800;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text, #111);
+    transition: transform 120ms ease, background 120ms ease;
+    white-space: nowrap;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn.primary {
+    background: var(--text, #111);
+    color: var(--card, #fff);
+    border-color: rgba(0,0,0,0.25);
+}
+
+.btn.secondary {
+    background: transparent;
+}
+
+/* Ghost should be theme-safe (no hard-coded #ddd/#111) */
+.btn.ghost {
+    background: transparent;
+    border-color: var(--border, rgba(0,0,0,0.18));
+    color: var(--text, #111);
+}
+
+.btn.ghost:hover {
+    background: rgba(127,127,127,0.10);
+}
+
+/* Errors */
+.error-text {
+    color: rgb(220, 38, 38);
+    font-size: 0.875rem;
+    margin-top: 4px;
+    font-weight: 700;
+}
+
+.input:disabled {
+    background: rgba(127,127,127,0.10);
+    color: var(--muted, #666);
+    cursor: not-allowed;
+}
+
+/* Dark theme tweaks */
+body.theme-dark .card {
+    box-shadow: 0 10px 28px rgba(0,0,0,0.45);
+}
+
+body.theme-dark .btn.primary {
+    background: #f2f2f2;
+    color: #111;
+    border-color: rgba(255,255,255,0.18);
+}
+
+body.theme-dark .banner.warn {
+    background: rgba(245, 158, 11, 0.14);
+    border-color: rgba(245, 158, 11, 0.30);
+}
+
+body.theme-dark .banner.info {
+    background: rgba(59, 130, 246, 0.14);
+    border-color: rgba(59, 130, 246, 0.30);
+}
+
+body.theme-dark .banner.success {
+    background: rgba(16, 185, 129, 0.14);
+    border-color: rgba(16, 185, 129, 0.30);
+}
+
+body.theme-dark .banner.error {
+    background: rgba(220, 38, 38, 0.14);
+    border-color: rgba(220, 38, 38, 0.30);
+}
+
+/* Small screens: kv stack + buttons full-width */
+@media (max-width: 560px) {
+    .kv {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        align-items: start;
+    }
+
+    .actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}

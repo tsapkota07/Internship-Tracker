@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Recently Deleted', '/css/apps-bulk.css')}"></head>
+
+<body th:class="${themeClass}">
+<div class="app-shell">
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="page stack">
+
+  <!-- Breadcrumbs -->
+  <div th:if="${breadcrumbs != null}"
+       th:replace="~{fragments/breadcrumb :: breadcrumb(${breadcrumbs})}">
+  </div>
+
+  <section class="page-header">
+    <div>
+      <h2 class="title">Recently Deleted</h2>
+      <p class="subtitle">Restore items or permanently delete them.</p>
+    </div>
+
+    <a class="btn ghost" th:href="@{/apps}">← Back</a>
+  </section>
+
+  <!-- Empty state -->
+  <section class="card empty" th:if="${#lists.isEmpty(apps)}">
+    <div class="empty-title">No deleted applications</div>
+    <div class="empty-sub">You’re all caught up.</div>
+  </section>
+
+  <!-- List -->
+  <section class="card" th:if="${!#lists.isEmpty(apps)}">
+    <div class="list">
+      <div class="row" th:each="app : ${apps}">
+        <div class="row-main">
+          <div class="row-title">
+            <span th:text="${app.company}">Company</span>
+          </div>
+          <div class="row-sub">
+            <span th:text="${app.role}">Role</span>
+          </div>
+        </div>
+
+        <div class="row-actions">
+          <form th:action="@{/apps/{id}/restore(id=${app.id})}" method="post" style="margin:0;">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <button class="btn primary" type="submit">Restore</button>
+          </form>
+
+          <form th:action="@{/apps/{id}/delete-forever(id=${app.id})}" method="post" style="margin:0;">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <button class="btn danger" type="submit">Delete forever</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+</div>
+</body>
+</html>

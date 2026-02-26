@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Select Guest Apps', '/css/apps-bulk.css')}"></head>
+
+<body th:class="${themeClass}">
+<div class="app-shell">
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="page stack">
+
+    <!-- Breadcrumbs -->
+    <div th:if="${breadcrumbs != null}"
+         th:replace="~{fragments/breadcrumb :: breadcrumb(${breadcrumbs})}">
+    </div>
+
+    <section class="page-header">
+        <div>
+            <h2 class="title">Select Guest Apps</h2>
+            <p class="subtitle">Choose which guest applications to import or discard.</p>
+        </div>
+
+        <a class="btn ghost" th:href="@{/apps}">← Back</a>
+    </section>
+
+    <!-- Empty state -->
+    <section class="card empty" th:if="${guestAppsCount == 0}">
+        <div class="empty-title">No guest apps found</div>
+        <div class="empty-sub">There’s nothing to import or discard.</div>
+
+        <div style="margin-top:12px;">
+            <a class="btn primary" th:href="@{/apps}">Back to Applications</a>
+        </div>
+    </section>
+
+    <!-- Bulk selection -->
+    <section class="card" th:if="${guestAppsCount > 0}">
+        <!-- Default method/action are optional because we use formaction,
+             but it’s cleaner to include them. -->
+        <form class="bulk-form" method="post" th:action="@{/apps/import-selected}">
+            <!-- CSRF -->
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+            <div class="hint">
+                Select the items you want to import or discard.
+            </div>
+
+            <div class="list">
+                <label class="check-row" th:each="app : ${guestApps}">
+                    <input class="check" type="checkbox" name="ids" th:value="${app.id}">
+                    <div class="check-main">
+                        <div class="row-title">
+                            <span th:text="${app.company}">Company</span>
+                            <span class="status-pill" th:text="${app.status}">APPLIED</span>
+                        </div>
+                        <div class="row-sub">
+                            <span th:text="${app.role}">Role</span>
+                        </div>
+                    </div>
+                </label>
+            </div>
+
+            <div class="bulk-actions">
+                <button class="btn primary"
+                        th:formaction="@{/apps/import-selected}"
+                        formmethod="post"
+                        type="submit">
+                    Import Selected
+                </button>
+
+                <button class="btn danger"
+                        th:formaction="@{/apps/discard-selected}"
+                        formmethod="post"
+                        type="submit">
+                    Discard Selected
+                </button>
+
+                <a class="btn ghost" th:href="@{/apps}">Cancel</a>
+            </div>
+        </form>
+    </section>
+
+</main>
+
+<script>
+    // Prevent weird text selection when rapidly clicking rows
+    document.addEventListener("mousedown", (e) => {
+        if (e.target.closest(".check-row")) e.preventDefault();
+    });
+</script>
+</div>
+</body>
+</html>

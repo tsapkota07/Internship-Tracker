@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Account Settings', '/css/account.css')}"></head>
+
+<body th:class="${themeClass}">
+<div class="app-shell">
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="page">
+
+  <div th:if="${breadcrumbs != null}"
+       th:replace="~{fragments/breadcrumb :: breadcrumb(${breadcrumbs})}">
+  </div>
+
+  <div class="page-header">
+    <div>
+      <h2 class="page-title">Account Settings</h2>
+      <p class="page-sub">Manage your account and security settings.</p>
+    </div>
+
+    <!-- ✅ correct route -->
+    <a class="btnx" th:href="@{/account/email}" style="text-decoration:none;">
+      Manage Email →
+    </a>
+  </div>
+
+  <div class="card">
+    <div class="kv">
+      <div>
+        <div class="muted">Username</div>
+        <div class="value" th:text="${guestMode} ? 'Guest' : ${username}">username</div>
+      </div>
+
+      <div>
+        <div class="muted">Email</div>
+        <div class="value" th:text="${hasEmail ? email : 'None'}">None</div>
+
+        <div style="margin-top:8px;">
+          <span th:if="${!hasEmail}" class="pill neutral">No email on file</span>
+          <span th:if="${hasEmail and emailVerified}" class="pill good">✅ Verified</span>
+          <span th:if="${hasEmail and !emailVerified}" class="pill bad">⚠️ Not verified</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div th:if="${guestMode}" class="banner info">
+      Please <a th:href="@{/login}">log in</a> to manage your account.
+    </div>
+
+    <div th:if="${!guestMode}">
+      <div class="banner info" th:if="${hasEmail and !emailVerified}">
+        Your email isn’t verified yet. Please check your inbox or resend the verification link on the Email page.
+        <div style="margin-top:10px;">
+          <a class="btnx primary" th:href="@{/account/email}">Go to Email Setup →</a>
+        </div>
+      </div>
+
+      <div th:if="${demoUser}" class="banner info">
+        <strong>Demo account:</strong> Account deletion is disabled.
+      </div>
+
+      <div class="card danger-zone" style="margin-top:16px;">
+        <h3 class="danger-title">Danger Zone</h3>
+        <p style="margin:6px 0 0; opacity:0.8;">Deleting your account is permanent.</p>
+
+        <div th:if="${deleteError}" class="banner error" style="margin-top:12px;">
+          <strong>Error:</strong> <span th:text="${deleteError}">Error</span>
+        </div>
+
+        <form th:action="@{/account/delete}" method="post" th:object="${form}">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+          <div class="form-row">
+            <label for="confirmUsername">Confirm Username</label>
+            <input id="confirmUsername" class="input" type="text" th:field="*{username}">
+            <p class="error-text" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
+          </div>
+
+          <div class="form-row">
+            <label for="confirmPassword">Confirm Password</label>
+            <input id="confirmPassword" class="input" type="password" th:field="*{password}">
+            <p class="error-text" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+          </div>
+
+          <div class="actions-row">
+            <button class="btnx danger" type="submit" th:disabled="${demoUser}">
+              Delete Account
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+</body>
+</html>
