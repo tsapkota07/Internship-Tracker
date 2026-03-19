@@ -40,3 +40,4 @@ deploy.sh
 deploy.private.sh
 *.pem
 *.key
+CLAUDE.md

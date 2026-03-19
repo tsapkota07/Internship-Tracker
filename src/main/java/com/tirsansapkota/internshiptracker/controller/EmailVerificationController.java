@@ -4,7 +4,9 @@ import com.tirsansapkota.internshiptracker.model.TokenType;
 import com.tirsansapkota.internshiptracker.repository.UserRepository;
 import com.tirsansapkota.internshiptracker.service.VerificationService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -37,15 +39,38 @@ public class EmailVerificationController {
     /**
      * GET /account/verify-email/confirm?token=...
      *
-     * Flow:
-     * 1) Validate token (throws if invalid/expired/used)
-     * 2) Apply changes based on token type
-     * 3) Save user
-     * 4) Mark token as used
-     * 5) Redirect to account email page with a status flag
+     * Shows a confirmation page with a button. The actual verification happens
+     * on POST so that email security scanners (which follow links automatically)
+     * do not trigger verification without the user's intent.
      */
     @GetMapping("/verify-email/confirm")
-    public String verify(@RequestParam(name = "token", required = false) String token) {
+    public String verifyPage(@RequestParam(name = "token", required = false) String token, Model model) {
+
+        if (token == null || token.isBlank()) {
+            return "redirect:/account/email?error=missingToken";
+        }
+
+        try {
+            // Validate the token exists and is not expired/used, but don't consume it yet.
+            verificationService.requireValid(token);
+        } catch (IllegalArgumentException ex) {
+            return "redirect:/account/email?error=invalidToken";
+        } catch (Exception ex) {
+            return "redirect:/account/email?error=serverError";
+        }
+
+        model.addAttribute("token", token);
+        return "verify-confirm";
+    }
+
+    /**
+     * POST /account/verify-email/confirm
+     *
+     * Actually applies the verification. Only reachable by a real user clicking
+     * the button on the confirmation page (not by automated link scanners).
+     */
+    @PostMapping("/verify-email/confirm")
+    public String verifySubmit(@RequestParam(name = "token", required = false) String token) {
 
         if (token == null || token.isBlank()) {
             return "redirect:/account/email?error=missingToken";
@@ -90,7 +115,7 @@ public class EmailVerificationController {
                 users.save(user);
                 verificationService.markUsed(t);
 
-                return "redirect:/account/verify-email/success?status=changed"; // (or your preferred target)
+                return "redirect:/account/verify-email/success?status=changed";
             }
 
             return "redirect:/account/email?error=unsupportedToken";

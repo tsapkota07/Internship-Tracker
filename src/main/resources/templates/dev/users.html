@@ -24,17 +24,58 @@
     </div>
     <div th:if="${otpSentUsername}" class="banner info" style="margin-bottom:16px;">
         OTP sent to <strong th:text="${otpSentUsername}">user</strong>'s email.
-        Ask them for the code, then use <strong>Change Password</strong> below.
+        Ask them for the code, then use <strong>Change PW</strong> below.
+    </div>
+
+    <!-- Filter + Sort bar -->
+    <div class="filter-bar">
+        <div class="filter-group">
+            <span class="filter-label">Role:</span>
+            <a class="filter-btn" th:classappend="${roleFilter == 'all'}  ? ' active'"
+               th:href="@{/dev/users(sort=${sort},dir=${dir},roleFilter='all',verifiedFilter=${verifiedFilter})}">All</a>
+            <a class="filter-btn" th:classappend="${roleFilter == 'users'} ? ' active'"
+               th:href="@{/dev/users(sort=${sort},dir=${dir},roleFilter='users',verifiedFilter=${verifiedFilter})}">Users</a>
+            <a class="filter-btn" th:classappend="${roleFilter == 'devs'}  ? ' active'"
+               th:href="@{/dev/users(sort=${sort},dir=${dir},roleFilter='devs',verifiedFilter=${verifiedFilter})}">Devs</a>
+            <a class="filter-btn" th:classappend="${roleFilter == 'demo'}  ? ' active'"
+               th:href="@{/dev/users(sort=${sort},dir=${dir},roleFilter='demo',verifiedFilter=${verifiedFilter})}">Demo</a>
+        </div>
+        <div class="filter-group">
+            <span class="filter-label">Verified:</span>
+            <a class="filter-btn" th:classappend="${verifiedFilter == 'all'} ? ' active'"
+               th:href="@{/dev/users(sort=${sort},dir=${dir},roleFilter=${roleFilter},verifiedFilter='all')}">All</a>
+            <a class="filter-btn" th:classappend="${verifiedFilter == 'yes'} ? ' active'"
+               th:href="@{/dev/users(sort=${sort},dir=${dir},roleFilter=${roleFilter},verifiedFilter='yes')}">Yes</a>
+            <a class="filter-btn" th:classappend="${verifiedFilter == 'no'}  ? ' active'"
+               th:href="@{/dev/users(sort=${sort},dir=${dir},roleFilter=${roleFilter},verifiedFilter='no')}">No</a>
+        </div>
     </div>
 
     <section class="card">
         <table class="dev-table">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Verified</th>
+                    <!-- Sortable headers -->
+                    <th th:with="col='id', newDir=${sort == 'id' ? (dir == 'asc' ? 'desc' : 'asc') : 'asc'}">
+                        <a class="sort-link" th:href="@{/dev/users(sort=${col},dir=${newDir},roleFilter=${roleFilter},verifiedFilter=${verifiedFilter})}">
+                            ID<span th:if="${sort == 'id'}" th:text="${dir == 'asc' ? ' ↑' : ' ↓'}"></span>
+                        </a>
+                    </th>
+                    <th th:with="col='username', newDir=${sort == 'username' ? (dir == 'asc' ? 'desc' : 'asc') : 'asc'}">
+                        <a class="sort-link" th:href="@{/dev/users(sort=${col},dir=${newDir},roleFilter=${roleFilter},verifiedFilter=${verifiedFilter})}">
+                            Username<span th:if="${sort == 'username'}" th:text="${dir == 'asc' ? ' ↑' : ' ↓'}"></span>
+                        </a>
+                    </th>
+                    <th th:with="col='email', newDir=${sort == 'email' ? (dir == 'asc' ? 'desc' : 'asc') : 'asc'}">
+                        <a class="sort-link" th:href="@{/dev/users(sort=${col},dir=${newDir},roleFilter=${roleFilter},verifiedFilter=${verifiedFilter})}">
+                            Email<span th:if="${sort == 'email'}" th:text="${dir == 'asc' ? ' ↑' : ' ↓'}"></span>
+                        </a>
+                    </th>
+                    <th th:with="col='verified', newDir=${sort == 'verified' ? (dir == 'asc' ? 'desc' : 'asc') : 'asc'}">
+                        <a class="sort-link" th:href="@{/dev/users(sort=${col},dir=${newDir},roleFilter=${roleFilter},verifiedFilter=${verifiedFilter})}">
+                            Verified<span th:if="${sort == 'verified'}" th:text="${dir == 'asc' ? ' ↑' : ' ↓'}"></span>
+                        </a>
+                    </th>
                     <th>Tags</th>
                     <th>Actions</th>
                 </tr>
@@ -42,55 +83,84 @@
             <tbody>
                 <tr th:each="u : ${allUsers}" th:classappend="${u.id == selfId} ? 'self-row'">
                     <td class="col-id" th:text="${u.id}">1</td>
+
                     <td class="col-username">
                         <span th:text="${u.username}">username</span>
                         <span th:if="${u.id == selfId}" class="pill you">you</span>
                     </td>
+
                     <td class="col-email">
                         <span th:if="${u.email != null and !#strings.isEmpty(u.email)}"
                               th:text="${u.email}">email@example.com</span>
                         <span th:unless="${u.email != null and !#strings.isEmpty(u.email)}"
                               class="muted">—</span>
                     </td>
+
                     <td class="col-verified">
                         <span th:if="${u.emailVerified}" class="pill good">yes</span>
                         <span th:unless="${u.emailVerified}" class="pill neutral">no</span>
                     </td>
+
                     <td class="col-tags">
                         <span th:text="${u.role}" class="pill role">USER</span>
                         <span th:if="${u.demoUser}" class="pill neutral" style="margin-left:4px;">demo</span>
                     </td>
+
                     <td class="col-actions">
-                        <!-- Can't act on yourself -->
+                        <!-- Self: no actions -->
                         <span th:if="${u.id == selfId}" class="muted" style="font-size:0.8rem;">—</span>
 
                         <th:block th:unless="${u.id == selfId}">
-                            <!-- Send OTP (only if user has an email) -->
-                            <form th:if="${u.email != null and !#strings.isEmpty(u.email)}"
+
+                            <!-- Send OTP: non-demo users with an email (for password change) -->
+                            <form th:if="${!u.demoUser and u.email != null and !#strings.isEmpty(u.email)}"
                                   th:action="@{/dev/users/{id}/send-otp(id=${u.id})}"
-                                  method="post"
-                                  style="display:inline;">
+                                  method="post" style="display:inline;">
                                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                 <button type="submit" class="btn-sm secondary">Send OTP</button>
                             </form>
-                            <span th:unless="${u.email != null and !#strings.isEmpty(u.email)}"
-                                  class="pill neutral"
-                                  title="No email — cannot send OTP"
-                                  style="font-size:0.75rem;">No email</span>
 
-                            <!-- Change Password link (goes to dedicated form) -->
+                            <!-- Change PW -->
                             <a th:href="@{/dev/users/{id}/change-password(id=${u.id})}"
                                class="btn-sm ghost">Change PW</a>
 
+                            <!-- Verify: demo users only, unverified, has email -->
+                            <form th:if="${u.demoUser and !u.emailVerified and u.email != null and !#strings.isEmpty(u.email)}"
+                                  th:action="@{/dev/users/{id}/verify(id=${u.id})}"
+                                  method="post" style="display:inline;">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                <button type="submit" class="btn-sm secondary">Verify</button>
+                            </form>
+
+                            <!-- Unverify: non-DEV users who are currently verified -->
+                            <form th:if="${!#strings.equals(u.role, 'DEV') and u.emailVerified}"
+                                  th:action="@{/dev/users/{id}/unverify(id=${u.id})}"
+                                  method="post" style="display:inline;"
+                                  th:onsubmit="'return confirm(\'Unverify ' + ${u.username} + '? This will also reset their theme to Light.\')'">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                <button type="submit" class="btn-sm secondary">Unverify</button>
+                            </form>
+
+                            <!-- Change Email: regular users (not DEV, not demo) who are verified -->
+                            <a th:if="${!#strings.equals(u.role, 'DEV') and !u.demoUser and u.emailVerified}"
+                               th:href="@{/dev/users/{id}/change-email(id=${u.id})}"
+                               class="btn-sm ghost">Change Email</a>
+
                             <!-- Delete -->
                             <form th:action="@{/dev/users/{id}/delete(id=${u.id})}"
-                                  method="post"
-                                  style="display:inline;"
-                                  onsubmit="return confirm('Delete account &quot;' + /*[[${u.username}]]*/ 'user' + '&quot;? This is permanent.')">
+                                  method="post" style="display:inline;"
+                                  th:onsubmit="'return confirm(\'Delete account &quot;' + ${u.username} + '&quot;? This is permanent.\')'">
                                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                 <button type="submit" class="btn-sm danger">Delete</button>
                             </form>
+
                         </th:block>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(allUsers)}">
+                    <td colspan="6" style="text-align:center; padding:24px; opacity:0.5;">
+                        No users match the current filters.
                     </td>
                 </tr>
             </tbody>

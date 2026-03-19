@@ -5,4 +5,5 @@ public enum TokenType {
     EMAIL_CHANGE,
     PASSWORD_RESET,
     DEV_OTP,
+    DEV_EMAIL_OTP,
 }

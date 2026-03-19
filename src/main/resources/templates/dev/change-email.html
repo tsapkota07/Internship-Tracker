@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Change Email — Dev', '/css/dev.css')}"></head>
+
+<body th:class="${themeClass}">
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="page" style="max-width:520px;">
+
+    <div class="page-header">
+        <div>
+            <h2 class="title">Change Email</h2>
+            <p class="subtitle">
+                For user: <strong th:text="${targetUser.username}">username</strong>
+                (<span th:text="${targetUser.email}">current@example.com</span>)
+            </p>
+        </div>
+        <a class="btn ghost" th:href="@{/dev/users}">← Users</a>
+    </div>
+
+    <div th:if="${ceSuccess}" class="banner success" style="margin-bottom:16px;">
+        <span th:text="${ceSuccess}"></span>
+    </div>
+    <div th:if="${ceError}" class="banner error" style="margin-bottom:16px;">
+        <span th:text="${ceError}"></span>
+    </div>
+
+    <section class="card" style="margin-bottom:16px;">
+        <p style="margin:0 0 12px; opacity:0.8; font-size:0.9rem;">
+            <strong>Step 1:</strong> Send an OTP to the user's current verified email.
+            Ask them to share the code with you.
+        </p>
+        <form th:action="@{/dev/users/{id}/change-email/send-otp(id=${targetUser.id})}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <button class="btn primary" type="submit">Send OTP to user</button>
+        </form>
+    </section>
+
+    <section class="card">
+        <p style="margin:0 0 16px; opacity:0.8; font-size:0.9rem;">
+            <strong>Step 2:</strong> Enter the OTP the user gives you, along with the new email address.
+        </p>
+
+        <form th:action="@{/dev/users/{id}/change-email(id=${targetUser.id})}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+            <div class="field">
+                <label for="otp">OTP (from user)</label>
+                <input id="otp"
+                       class="input"
+                       type="text"
+                       name="otp"
+                       maxlength="6"
+                       placeholder="6-digit code"
+                       autocomplete="off"
+                       required />
+            </div>
+
+            <div class="field">
+                <label for="newEmail">New Email Address</label>
+                <input id="newEmail"
+                       class="input"
+                       type="email"
+                       name="newEmail"
+                       placeholder="new@example.com"
+                       autocomplete="off"
+                       required />
+            </div>
+
+            <div class="actions">
+                <button class="btn primary" type="submit">Change Email</button>
+                <a class="btn ghost" th:href="@{/dev/users}">Cancel</a>
+            </div>
+        </form>
+    </section>
+
+</main>
+</body>
+</html>
