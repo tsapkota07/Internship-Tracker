@@ -7,6 +7,7 @@ import com.tirsansapkota.internshiptracker.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -128,7 +129,17 @@ public class PreferencesController {
      * Saves preferences and redirects back with a "saved" query param.
      */
     @PostMapping("/preferences")
-    public String save(@Valid @ModelAttribute("form") PreferencesForm form) {
+    public String save(@Valid @ModelAttribute("form") PreferencesForm form,
+                       BindingResult bindingResult,
+                       Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("breadcrumbs", List.of(
+                    Map.of("label", "Applications", "url", "/apps"),
+                    Map.of("label", "Preferences", "url", "")
+            ));
+            return "preferences";
+        }
+
         String gateRedirect = enforceEmailGateOrRedirect();
         if (gateRedirect != null) return gateRedirect;
 

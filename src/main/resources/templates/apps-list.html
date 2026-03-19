@@ -73,7 +73,7 @@
     </section>
 
     <!-- Filters -->
-    <section class="card" role="region" aria-label="Filters">
+    <section class="card flat" role="region" aria-label="Filters">
         <form class="filters" method="get" th:action="@{/apps}">
             <div class="field">
                 <label for="q">Search</label>
@@ -92,6 +92,17 @@
                     <option value="INTERVIEW" th:selected="${status?.name() == 'INTERVIEW'}">Interview</option>
                     <option value="OFFER" th:selected="${status?.name() == 'OFFER'}">Offer</option>
                     <option value="REJECTED" th:selected="${status?.name() == 'REJECTED'}">Rejected</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="sort">Sort</label>
+                <select id="sort" name="sort">
+                    <option value="date_desc"    th:selected="${sort == 'date_desc'}">Newest first</option>
+                    <option value="date_asc"     th:selected="${sort == 'date_asc'}">Oldest first</option>
+                    <option value="company_asc"  th:selected="${sort == 'company_asc'}">Company A→Z</option>
+                    <option value="company_desc" th:selected="${sort == 'company_desc'}">Company Z→A</option>
+                    <option value="status"       th:selected="${sort == 'status'}">By status</option>
                 </select>
             </div>
 
@@ -128,9 +139,6 @@
                     <span class="role" th:text="${app.role}">Role</span>
                 </div>
 
-<!--                <div class="app-meta">-->
-<!--                    <span class="pill" th:text="${app.status}">STATUS</span>-->
-<!--                </div>-->
                 <div class="app-meta">
     <span class="pill"
           th:classappend="${app.status != null ? 'status-' + #strings.toLowerCase(app.status) : ''}"
@@ -147,6 +155,20 @@
                 </form>
             </div>
         </div>
+    </section>
+
+    <!-- Pagination -->
+    <section th:if="${totalPages > 1}" class="pagination" role="navigation" aria-label="Pagination">
+        <a class="btn ghost"
+           th:if="${currentPage > 0}"
+           th:href="@{/apps(q=${q}, status=${status}, sort=${sort}, page=${currentPage - 1})}">← Prev</a>
+
+        <span class="page-info"
+              th:text="'Page ' + (${currentPage} + 1) + ' of ' + ${totalPages}">Page 1 of 1</span>
+
+        <a class="btn ghost"
+           th:if="${currentPage < totalPages - 1}"
+           th:href="@{/apps(q=${q}, status=${status}, sort=${sort}, page=${currentPage + 1})}">Next →</a>
     </section>
 
 </main>

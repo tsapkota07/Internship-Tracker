@@ -1,43 +1,14 @@
-/* --- Layout safety: prevents overlap/overflow in grids --- */
-*,
-*::before,
-*::after {
+*, *::before, *::after { box-sizing: border-box; }
+
+.grid { align-items: start; }
+.grid > * { min-width: 0; }
+.field { min-width: 0; }
+.field input, .field select, .field textarea {
     box-sizing: border-box;
-}
-
-.grid {
-    /* keep your grid as-is, but add this */
-    align-items: start;
-}
-
-.grid > * {
-    min-width: 0; /* CRITICAL: prevents grid items from overflowing and overlapping */
-}
-
-.field {
-    min-width: 0; /* also safe */
-}
-
-.field input,
-.field select,
-.field textarea {
-    box-sizing: border-box; /* ensures padding/border don't exceed 100% width */
     min-width: 0;
 }
-
-/* Long validation messages shouldn’t break layout */
-.field-error {
-    word-break: break-word;
-    overflow-wrap: anywhere;
-}
-
-/* Sometimes buttons or links can cause overflow too */
-.actions {
-    flex-wrap: wrap;
-}
-
-
-/* static/css/apps-form.css */
+.field-error { word-break: break-word; overflow-wrap: anywhere; }
+.actions { flex-wrap: wrap; }
 
 .page {
     max-width: 980px;
@@ -57,11 +28,11 @@
 .subtitle { margin: 0; opacity: 0.75; }
 
 .card {
-    background: rgba(255,255,255,0.92);
-    border: 1px solid rgba(0,0,0,0.08);
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 14px;
     padding: 16px;
-    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
 }
 
 .btn {
@@ -71,37 +42,30 @@
     padding: 10px 14px;
     border-radius: 10px;
     text-decoration: none;
-    font-weight: 800;
-    border: 1px solid rgba(0,0,0,0.12);
+    font-weight: 700;
+    border: 1px solid var(--border);
     cursor: pointer;
     background: transparent;
-    color: inherit;
+    color: var(--text);
+    transition: opacity 0.15s, transform 0.12s;
 }
 
 .btn.primary {
-    background: #111;
-    color: #fff;
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    border-color: transparent;
 }
 
-.btn.ghost {
-    background: transparent;
-}
-
-.btn:hover { transform: translateY(-1px); }
+.btn.ghost { background: transparent; }
+.btn:hover { transform: translateY(-1px); opacity: 0.85; }
 
 .banner.warn {
     margin-bottom: 14px;
     border-left: 4px solid rgba(176, 0, 32, 0.55);
 }
 
-.banner-title {
-    font-weight: 900;
-    margin-bottom: 2px;
-}
-
-.banner-sub {
-    opacity: 0.85;
-}
+.banner-title { font-weight: 800; margin-bottom: 2px; }
+.banner-sub { opacity: 0.85; }
 
 .form-error {
     padding: 10px 12px;
@@ -110,6 +74,7 @@
     border: 1px solid rgba(176, 0, 32, 0.25);
     margin-bottom: 12px;
     font-weight: 700;
+    color: #e05c6e;
 }
 
 .grid {
@@ -120,7 +85,7 @@
 
 .field label {
     display: block;
-    font-weight: 800;
+    font-weight: 700;
     margin-bottom: 6px;
 }
 
@@ -130,51 +95,27 @@
     width: 100%;
     padding: 10px 12px;
     border-radius: 10px;
-    border: 1px solid rgba(0,0,0,0.18);
-    background: rgba(255,255,255,0.9);
-    color: inherit;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
 }
 
-.field textarea {
-    min-height: 120px;
-    resize: vertical;
-}
+.field textarea { min-height: 120px; resize: vertical; }
 
 .field-error {
     margin: 6px 0 0;
-    color: #b00020;
+    color: #e05c6e;
     font-weight: 700;
     font-size: 0.95rem;
 }
 
-.field.full {
-    grid-column: 1 / -1;
-}
+.field.full { grid-column: 1 / -1; }
 
 .actions {
     display: flex;
     gap: 10px;
     margin-top: 14px;
     justify-content: flex-end;
-}
-
-/* Dark theme tweaks */
-body.theme-dark .card {
-    background: rgba(24, 24, 24, 0.92);
-    border-color: rgba(255,255,255,0.12);
-    box-shadow: 0 10px 28px rgba(0,0,0,0.45);
-}
-
-body.theme-dark .field input,
-body.theme-dark .field select,
-body.theme-dark .field textarea {
-    background: rgba(24,24,24,0.9);
-    border-color: rgba(255,255,255,0.16);
-}
-
-body.theme-dark .btn.primary {
-    background: #f2f2f2;
-    color: #111;
 }
 
 @media (max-width: 860px) {

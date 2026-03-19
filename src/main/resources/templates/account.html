@@ -37,8 +37,8 @@
 
         <div style="margin-top:8px;">
           <span th:if="${!hasEmail}" class="pill neutral">No email on file</span>
-          <span th:if="${hasEmail and emailVerified}" class="pill good">✅ Verified</span>
-          <span th:if="${hasEmail and !emailVerified}" class="pill bad">⚠️ Not verified</span>
+          <span th:if="${hasEmail and emailVerified}" class="pill good">Verified</span>
+          <span th:if="${hasEmail and !emailVerified}" class="pill bad">Not verified</span>
         </div>
       </div>
     </div>

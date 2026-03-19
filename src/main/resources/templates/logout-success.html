@@ -3,18 +3,33 @@
 <head th:replace="~{fragments/head-auth :: headAuth('Signed out', null)}"></head>
 
 <body class="auth">
-<div class="box">
-    <h1>You’re signed out</h1>
+<canvas id="particles"></canvas>
 
-    <p class="success">
-        ✅ You have been logged out successfully.
-    </p>
+<div class="auth-shell">
 
-    <div style="margin-top:16px;">
-        <a th:href="@{/login}">Log in again</a>
-        <span class="muted"> · </span>
-        <a th:href="@{/apps}">Continue as guest</a>
+    <div class="auth-brand">
+        <a class="auth-logo" th:href="@{/}">internship tracker</a>
+        <p class="auth-tagline">See you<br>next time.</p>
+        <ul class="auth-features">
+            <li>Your data is saved and waiting</li>
+            <li>Track all your applications in one place</li>
+            <li>Simple, private, free</li>
+        </ul>
     </div>
+
+    <div class="auth-card">
+        <div class="box">
+            <h1>You've been signed out.</h1>
+
+            <div class="logout-actions">
+                <a th:href="@{/login}">Log in again</a>
+                <a th:href="@{/apps}">Continue as guest</a>
+            </div>
+        </div>
+    </div>
+
 </div>
+
+<footer class="auth-footer">simple &middot; private &middot; free</footer>
 </body>
 </html>

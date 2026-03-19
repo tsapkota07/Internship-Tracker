@@ -1,22 +1,16 @@
-/* static/css/logout-modal.css */
+body.logout-open { overflow: hidden; }
 
-/* Prevent scroll behind modal */
-body.logout-open {
-    overflow: hidden;
-}
-
-/* Overlay hidden by default */
 .logout-overlay {
     display: none;
     position: fixed;
     inset: 0;
-    z-index: 1000;
-
-    background: rgba(0, 0, 0, 0.55);
+    z-index: 3000;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     padding: 18px;
 }
 
-/* Show when modal is open */
 body.logout-open .logout-overlay {
     display: grid;
     place-items: center;
@@ -24,82 +18,65 @@ body.logout-open .logout-overlay {
 
 .logout-card {
     width: 100%;
-    max-width: 420px;
-    border-radius: 14px;
-    padding: 16px 16px 14px;
-
-    background: var(--card, #ffffff);
-    color: var(--text, #111111);
-    border: 1px solid var(--border, rgba(0,0,0,0.10));
-    box-shadow: 0 18px 60px rgba(0,0,0,0.35);
-}
-
-.logout-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+    max-width: 400px;
+    border-radius: 16px;
+    padding: 24px;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.4);
 }
 
 .logout-card h2 {
-    margin: 0;
-    font-size: 1.15rem;
+    margin: 0 0 8px;
+    font-size: 1.1rem;
+    font-weight: 700;
 }
 
 .logout-text {
-    margin: 10px 0 14px;
-    color: var(--muted, #666);
-    line-height: 1.4;
+    margin: 0 0 20px;
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
 }
 
-.logout-actions {
+.logout-card .logout-actions {
     display: flex;
+    flex-direction: row;
     gap: 10px;
     justify-content: flex-end;
-    flex-wrap: wrap;
+    align-items: center;
 }
 
-/* Buttons inside modal */
+.logout-card .logout-actions form {
+    display: inline-flex;
+    margin: 0;
+}
+
 .logout-card .btn {
-    border-radius: 10px;
-    padding: 10px 12px;
+    padding: 10px 16px;
+    border-radius: 8px;
     font-weight: 600;
+    font-size: 0.9rem;
     cursor: pointer;
-    border: 1px solid var(--border, rgba(0,0,0,0.12));
-    background: var(--card, #fff);
-    color: var(--text, #111);
-}
-
-.logout-card .btn.ghost {
+    border: 1px solid var(--border);
     background: transparent;
+    color: var(--text);
+    transition: opacity 0.15s;
 }
 
-.logout-card .btn.ghost:hover {
-    background: rgba(127, 127, 127, 0.12);
-}
+.logout-card .btn:hover { opacity: 0.75; }
+
+.logout-card .btn.ghost { background: transparent; }
 
 .logout-card .btn.danger {
-    border-color: rgba(220, 38, 38, 0.55);
     background: rgba(220, 38, 38, 0.12);
-    color: rgb(185, 28, 28);
+    border-color: rgba(220, 38, 38, 0.3);
+    color: #e05c6e;
 }
 
-.logout-card .btn.danger:hover {
-    background: rgba(220, 38, 38, 0.18);
-}
-
-/* ✅ Wrapper-based blur + click-block behind modal */
+/* Blur app content behind modal */
 body.logout-open .app-shell {
-    filter: blur(6px);
-    transform: translateZ(0); /* reduces blur flicker */
-    pointer-events: none;     /* prevents clicking behind modal */
-}
-
-/* Optional: add a subtle extra darkening behind the blur */
-body.logout-open .app-shell::after {
-    content: "";
-    position: fixed;      /* cover the viewport */
-    inset: 0;
-    background: rgba(0,0,0,0.10);
+    filter: blur(4px);
     pointer-events: none;
 }

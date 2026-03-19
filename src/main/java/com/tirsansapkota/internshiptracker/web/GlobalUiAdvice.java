@@ -129,10 +129,17 @@ public class GlobalUiAdvice {
             }
         }
 
-        // Keep raw enum available (handy in templates if needed)
         model.addAttribute("theme", theme);
 
-        // CSS class applied on <body class="...">
-        model.addAttribute("themeClass", theme == Theme.DARK ? "theme-dark" : "theme-light");
+        String themeClass = switch (theme) {
+            case DARK       -> "theme-dark";
+            case SERIKA     -> "theme-serika";
+            case NORD       -> "theme-nord";
+            case DRACULA    -> "theme-dracula";
+            case ROSE_PINE  -> "theme-rose-pine";
+            case CATPPUCCIN -> "theme-catppuccin";
+            default         -> "theme-light";
+        };
+        model.addAttribute("themeClass", themeClass);
     }
 }

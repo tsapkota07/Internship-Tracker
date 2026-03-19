@@ -37,19 +37,19 @@
 
             <!-- Status banners -->
             <div th:if="${param.verified != null}" class="banner success">
-                ✅ Your email is verified.
+                Your email is verified.
             </div>
 
             <div th:if="${param.sent != null}" class="banner info">
-                ✅ If the email is correct, check your inbox (and spam/junk) for the verification link.
+                If the email is correct, check your inbox (and spam/junk) for the verification link.
             </div>
 
             <div th:if="${param.pending != null}" class="banner info">
-                ✅ We sent a confirmation link to your new email. Please confirm it to finish changing your email.
+                We sent a confirmation link to your new email. Please confirm it to finish changing your email.
             </div>
 
             <div th:if="${param.cancelled != null}" class="banner info">
-                ✅ Pending email change cancelled.
+                Pending email change cancelled.
             </div>
 
             <div th:if="${user.demoUser}" class="banner info">
@@ -93,7 +93,7 @@
 
                     <span th:if="${!hasEmail}" class="pill neutral">No email on file</span>
                     <span th:if="${hasEmail and isVerified}" class="pill good">Verified</span>
-                    <span th:if="${hasEmail and !isVerified}" class="pill bad">⚠️ Not verified</span>
+                    <span th:if="${hasEmail and !isVerified}" class="pill bad">Not verified</span>
                 </div>
             </div>
 

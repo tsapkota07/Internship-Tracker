@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -76,10 +77,14 @@ public class InternshipApplicationController {
     // PAGE: /apps (List + filter + dashboard stats)
     // =========================================================
 
+    private static final int PAGE_SIZE = 20;
+
     @GetMapping("/apps")
     public String appsHome(
             @RequestParam(required = false) String q,
             @RequestParam(required = false) ApplicationStatus status,
+            @RequestParam(defaultValue = "date_desc") String sort,
+            @RequestParam(defaultValue = "0") int page,
             Model model,
             HttpSession session
     ) {
@@ -90,19 +95,33 @@ public class InternshipApplicationController {
         List<InternshipApplication> filteredApps;
 
         if (guestMode) {
-            // Guests store apps in session
             allApps = guestStore.getAll(session);
             filteredApps = filterGuestList(allApps, q, status);
         } else {
-            // Logged-in users store apps in DB
-            String username = currentUsernameOrNull(); // safe here
-            allApps = service.getAllForUser(username);                 // stats (unfiltered)
-            filteredApps = service.filterForUser(username, q, status); // list (filtered)
+            String username = currentUsernameOrNull();
+            allApps = service.getAllForUser(username);
+            filteredApps = service.filterForUser(username, q, status);
         }
+
+        // Sort
+        filteredApps = sortApps(filteredApps, sort);
+
+        // Pagination
+        int totalItems = filteredApps.size();
+        int totalPages = (totalItems == 0) ? 1 : (int) Math.ceil((double) totalItems / PAGE_SIZE);
+        int safePage = Math.max(0, Math.min(page, totalPages - 1));
+        int from = safePage * PAGE_SIZE;
+        int to = Math.min(from + PAGE_SIZE, totalItems);
+        List<InternshipApplication> pagedApps = filteredApps.subList(from, to);
 
         // Filter state
         model.addAttribute("filtersActive", filtersActive);
-        model.addAttribute("apps", filteredApps);
+        model.addAttribute("apps", pagedApps);
+
+        // Pagination state
+        model.addAttribute("currentPage", safePage);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalItems", totalItems);
 
         // Dashboard stats always based on ALL apps (not filtered results)
         model.addAttribute("totalCount", allApps.size());
@@ -114,8 +133,8 @@ public class InternshipApplicationController {
         // Preserve filter inputs
         model.addAttribute("q", q);
         model.addAttribute("status", status);
+        model.addAttribute("sort", sort);
 
-        // Breadcrumb: your "home page" is Applications, so show just one crumb (current)
         model.addAttribute("breadcrumbs", List.of(
                 Map.of("label", "Applications", "url", "")
         ));
@@ -419,6 +438,26 @@ public class InternshipApplicationController {
     // =========================================================
     // Guest-only filtering helper
     // =========================================================
+
+    private static List<InternshipApplication> sortApps(
+            List<InternshipApplication> apps, String sort) {
+        Comparator<InternshipApplication> cmp = switch (sort) {
+            case "date_asc"     -> Comparator.comparing(
+                    InternshipApplication::getAppliedDate,
+                    Comparator.nullsLast(Comparator.naturalOrder()));
+            case "company_asc"  -> Comparator.comparing(
+                    a -> a.getCompany() == null ? "" : a.getCompany().toLowerCase());
+            case "company_desc" -> Comparator.<InternshipApplication, String>comparing(
+                    a -> a.getCompany() == null ? "" : a.getCompany().toLowerCase())
+                    .reversed();
+            case "status"       -> Comparator.comparing(
+                    a -> a.getStatus() == null ? "" : a.getStatus().name());
+            default             -> Comparator.comparing(
+                    InternshipApplication::getAppliedDate,
+                    Comparator.nullsLast(Comparator.reverseOrder()));
+        };
+        return apps.stream().sorted(cmp).toList();
+    }
 
     /**
      * Guests don't have DB filtering, so we filter session apps in-memory.

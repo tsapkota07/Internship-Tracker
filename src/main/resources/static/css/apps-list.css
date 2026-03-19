@@ -90,12 +90,27 @@
     margin-bottom: 14px;
 }
 
+.card.stats {
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    padding: 0 0 4px;
+}
+
 .stat {
-    padding: 10px;
-    border-radius: 12px;
-    border: 1px solid var(--border, rgba(0,0,0,0.10));
-    background: rgba(127,127,127,0.06);
+    padding: 8px 4px;
+    border-radius: 0;
+    border: none;
+    background: transparent;
     text-align: center;
+}
+
+/* Flat card — no border/shadow, blends into page bg */
+.card.flat {
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    padding: 0 0 4px;
 }
 
 .stat-label {
@@ -112,7 +127,7 @@
 /* Filters */
 .filters {
     display: grid;
-    grid-template-columns: minmax(220px, 1.6fr) minmax(160px, 0.8fr) auto;
+    grid-template-columns: minmax(220px, 1.6fr) minmax(140px, 0.7fr) minmax(140px, 0.7fr) auto;
     gap: 12px;
     align-items: end;
 }
@@ -142,8 +157,8 @@
 .field input:focus,
 .field select:focus {
     outline: none;
-    border-color: rgba(59, 130, 246, 0.55);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+    border-color: rgba(200, 93, 46, 0.55);
+    box-shadow: 0 0 0 3px rgba(200, 93, 46, 0.15);
 }
 
 .filter-actions {
@@ -217,47 +232,16 @@
     background: rgba(127,127,127,0.08);
 }
 
-/* Color-coded statuses */
-.pill.status-applied {
-    background-color: #e0f2fe; /* Light blue */
-    color: #0284c7;            /* Dark blue */
-}
-
-.pill.status-interview {
-    background-color: #fef08a; /* Light yellow */
-    color: #854d0e;            /* Dark yellow/brown */
-}
-
-.pill.status-offer {
-    background-color: #dcfce7; /* Light green */
-    color: #166534;            /* Dark green */
-}
-
-.pill.status-rejected {
-    background-color: #fee2e2; /* Light red */
-    color: #b91c1c;            /* Dark red */
-}
+/* Color-coded statuses — semi-transparent so they work on any theme */
+.pill.status-applied   { background: rgba(37, 99, 235, 0.15);  border-color: rgba(37, 99, 235, 0.3);  color: #3b82f6; }
+.pill.status-interview { background: rgba(234, 179, 8, 0.15);  border-color: rgba(234, 179, 8, 0.3);  color: #ca8a04; }
+.pill.status-offer     { background: rgba(34, 197, 94, 0.15);  border-color: rgba(34, 197, 94, 0.3);  color: #16a34a; }
+.pill.status-rejected  { background: rgba(239, 68, 68, 0.15);  border-color: rgba(239, 68, 68, 0.3);  color: #dc2626; }
 
 .app-actions {
     display: flex;
     gap: 10px;
     align-items: center;
-}
-
-/* Dark theme tweaks */
-body.theme-dark .card {
-    box-shadow: 0 10px 28px rgba(0,0,0,0.45);
-}
-
-body.theme-dark .btn.primary {
-    background: #f2f2f2;
-    color: #111;
-}
-
-body.theme-dark .btn.danger {
-    background: rgba(255, 80, 110, 0.12);
-    border-color: rgba(255, 80, 110, 0.25);
-    color: #ff8aa0;
 }
 
 /* Responsive */
@@ -268,4 +252,17 @@ body.theme-dark .btn.danger {
     .page-header { flex-direction: column; align-items: stretch; }
     .app-row { flex-direction: column; align-items: stretch; }
     .app-actions { justify-content: flex-start; flex-wrap: wrap; }
+}
+/* Pagination */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 8px 0 4px;
+}
+
+.page-info {
+    font-size: 0.875rem;
+    color: #888;
 }

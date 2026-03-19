@@ -163,8 +163,8 @@ label {
 
 .input:focus {
     outline: none;
-    border-color: rgba(59, 130, 246, 0.55);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+    border-color: rgba(200, 93, 46, 0.55);
+    box-shadow: 0 0 0 3px rgba(200, 93, 46, 0.15);
 }
 
 /* Shared actions row (also used inside banners for pending) */

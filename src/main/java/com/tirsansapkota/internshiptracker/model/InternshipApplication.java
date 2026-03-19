@@ -40,6 +40,7 @@ public class InternshipApplication
     private String link;
     private String location;
     @Column(length = 2000)
+    @jakarta.validation.constraints.Size(max = 2000, message = "Notes must be 2000 characters or fewer.")
     private String notes;
 
     @ManyToOne(fetch = FetchType.LAZY)

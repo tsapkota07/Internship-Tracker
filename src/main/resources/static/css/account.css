@@ -1,5 +1,3 @@
-/* static/css/account.css */
-
 .page {
     max-width: 920px;
     margin: 28px auto;
@@ -26,31 +24,20 @@
     line-height: 1.35;
 }
 
-/* Card */
 .card {
-    border: 1px solid rgba(0,0,0,0.10);
+    border: 1px solid var(--border);
     border-radius: 16px;
-    background: rgba(255,255,255,0.9);
-    box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+    background: var(--surface);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
     padding: 18px;
-}
-
-body.theme-dark .card {
-    background: rgba(18,18,18,0.85);
-    border-color: rgba(255,255,255,0.12);
-    box-shadow: 0 14px 45px rgba(0,0,0,0.35);
 }
 
 .divider {
     height: 1px;
-    background: rgba(0,0,0,0.08);
+    background: var(--border);
     margin: 16px 0;
 }
-body.theme-dark .divider {
-    background: rgba(255,255,255,0.12);
-}
 
-/* Key/value row */
 .kv {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -72,7 +59,6 @@ body.theme-dark .divider {
     font-size: 1.05rem;
 }
 
-/* Pills */
 .pill {
     display: inline-flex;
     align-items: center;
@@ -81,37 +67,26 @@ body.theme-dark .divider {
     border-radius: 999px;
     font-weight: 700;
     font-size: 0.9rem;
-    border: 1px solid rgba(0,0,0,0.10);
-    background: rgba(0,0,0,0.03);
+    border: 1px solid var(--border);
+    background: var(--bg);
 }
 
-body.theme-dark .pill {
-    border-color: rgba(255,255,255,0.14);
-    background: rgba(255,255,255,0.06);
-}
+.pill.good    { background: rgba(46, 204, 113, 0.12); border-color: rgba(46, 204, 113, 0.3); }
+.pill.bad     { background: rgba(231, 76, 60, 0.12);  border-color: rgba(231, 76, 60, 0.3); }
+.pill.neutral { background: rgba(52, 152, 219, 0.10); border-color: rgba(52, 152, 219, 0.25); }
 
-.pill.good { background: rgba(46, 204, 113, 0.12); border-color: rgba(46, 204, 113, 0.25); }
-.pill.bad { background: rgba(231, 76, 60, 0.12); border-color: rgba(231, 76, 60, 0.25); }
-.pill.neutral { background: rgba(52, 152, 219, 0.10); border-color: rgba(52, 152, 219, 0.22); }
-
-/* Banners */
 .banner {
     border-radius: 12px;
-    padding: 12px 12px;
-    border: 1px solid rgba(0,0,0,0.12);
+    padding: 12px;
+    border: 1px solid var(--border);
     margin-bottom: 12px;
 }
 
-body.theme-dark .banner {
-    border-color: rgba(255,255,255,0.14);
-}
+.banner.info    { background: rgba(52, 152, 219, 0.10); }
+.banner.warn    { background: rgba(241, 196, 15, 0.12); }
+.banner.error   { background: rgba(231, 76, 60, 0.10); }
+.banner.success { background: rgba(46, 204, 113, 0.10); }
 
-.banner.info { background: rgba(52, 152, 219, 0.10); }
-.banner.warn { background: rgba(241, 196, 15, 0.14); }
-.banner.error { background: rgba(231, 76, 60, 0.12); }
-.banner.success { background: rgba(46, 204, 113, 0.12); }
-
-/* Form */
 .form-row {
     display: flex;
     flex-direction: column;
@@ -129,29 +104,23 @@ label {
     width: 100%;
     border-radius: 12px;
     padding: 11px 12px;
-    border: 1px solid rgba(0,0,0,0.14);
-    background: rgba(255,255,255,0.95);
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
     outline: none;
 }
 
-body.theme-dark .input {
-    background: rgba(20,20,20,0.85);
-    border-color: rgba(255,255,255,0.15);
-    color: #f2f2f2;
-}
-
 .input:focus {
-    border-color: rgba(52,152,219,0.55);
-    box-shadow: 0 0 0 4px rgba(52,152,219,0.12);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
 .error-text {
-    color: #b00020;
+    color: #e05c6e;
     font-weight: 600;
     margin: 0;
 }
 
-/* Buttons (works alongside your existing .btn in logout modal too) */
 .actions-row {
     display: flex;
     gap: 10px;
@@ -166,45 +135,32 @@ body.theme-dark .input {
     justify-content: center;
     padding: 10px 12px;
     border-radius: 12px;
-    border: 1px solid rgba(0,0,0,0.14);
-    background: rgba(0,0,0,0.04);
+    border: 1px solid var(--border);
+    background: var(--surface);
     cursor: pointer;
-    font-weight: 800;
+    font-weight: 700;
     text-decoration: none;
-    color: inherit;
+    color: var(--text);
+    transition: opacity 0.15s, transform 0.12s;
 }
 
-body.theme-dark .btnx {
-    border-color: rgba(255,255,255,0.18);
-    background: rgba(255,255,255,0.06);
-}
+.btnx:hover { transform: translateY(-1px); opacity: 0.85; }
 
-.btnx:hover { transform: translateY(-1px); }
 .btnx.primary {
-    background: #121212;
-    color: white;
-}
-body.theme-dark .btnx.primary {
-    background: #f2f2f2;
-    color: #111;
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    border-color: transparent;
 }
 
 .btnx.danger {
-    background: rgba(231, 76, 60, 0.14);
-    border-color: rgba(231, 76, 60, 0.28);
+    background: rgba(231, 76, 60, 0.12);
+    border-color: rgba(231, 76, 60, 0.3);
+    color: #e05c6e;
 }
 
-/* Danger zone wrapper */
 .danger-zone {
-    border: 1px solid rgba(231, 76, 60, 0.25);
+    border: 1px solid rgba(231, 76, 60, 0.3);
     background: rgba(231, 76, 60, 0.06);
 }
 
-body.theme-dark .danger-zone {
-    background: rgba(231, 76, 60, 0.10);
-    border-color: rgba(231, 76, 60, 0.25);
-}
-
-.danger-title {
-    margin: 0 0 4px;
-}
+.danger-title { margin: 0 0 4px; }

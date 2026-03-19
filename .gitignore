@@ -33,6 +33,8 @@ build/
 .vscode/
 
 ### Extra Files ###
+.env
+run-local.sh
 structure_exports/
 deploy.sh
 deploy.private.sh

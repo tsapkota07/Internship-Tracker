@@ -5,10 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title th:text="${title} ?: 'Internship Tracker'">Internship Tracker</title>
 
+    <!-- Inter font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" />
+
     <!-- Auth-only CSS -->
     <link rel="stylesheet" href="/css/auth.css" />
 
     <!-- Optional page css -->
     <link th:if="${extraCss != null}" rel="stylesheet" th:href="${extraCss}" />
+
+    <!-- Particle animation (canvas must exist in body) -->
+    <script src="/js/particles.js" defer></script>
 </head>
 </html>

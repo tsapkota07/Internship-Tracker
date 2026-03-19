@@ -2,36 +2,129 @@
 *::before,
 *::after { box-sizing: border-box; }
 
-/* Default variables (light) */
+/* =====================================================
+   THEMES — each defines the same set of CSS variables.
+   Applied as a class on <body>.
+   ===================================================== */
+
 .theme-light {
-    --bg: #ffffff;
-    --text: #111827;
-    --muted: #6b7280;
-    --card: #f9fafb;
-    --border: #e5e7eb;
-    --link: #2563eb;
-    --btn-bg: #111827;
-    --btn-text: #ffffff;
+    --bg:        #f6f5f2;
+    --surface:   #ffffff;
+    --border:    #e5e7eb;
+    --text:      #111827;
+    --muted:     #6b7280;
+    --accent:    #c85d2e;
+    --link:      #c85d2e;
+    --btn-bg:    #111827;
+    --btn-text:  #ffffff;
+    --navbar-bg: rgba(246,245,242,0.92);
+    --card: var(--surface);
 }
 
-/* Dark mode variables */
 .theme-dark {
-    --bg: #0b1220;
-    --text: #e5e7eb;
-    --muted: #94a3b8;
-    --card: #111827;
-    --border: #243041;
-    --link: #60a5fa;
-    --btn-bg: #e5e7eb;
-    --btn-text: #111827;
+    --bg:        #0b1220;
+    --surface:   #111827;
+    --border:    #243041;
+    --text:      #e5e7eb;
+    --muted:     #94a3b8;
+    --accent:    #f0895c;
+    --link:      #f0895c;
+    --btn-bg:    #e5e7eb;
+    --btn-text:  #111827;
+    --navbar-bg: rgba(11,18,32,0.85);
+    --card: var(--surface);
 }
 
-/* Apply variables */
+/* monkeytype serika dark */
+.theme-serika {
+    --bg:        #323437;
+    --surface:   #2c2e31;
+    --border:    #3d3f43;
+    --text:      #d1d0c5;
+    --muted:     #7e8085;
+    --accent:    #e2b714;
+    --link:      #e2b714;
+    --btn-bg:    #e2b714;
+    --btn-text:  #323437;
+    --navbar-bg: rgba(44,46,49,0.9);
+    --card: var(--surface);
+}
+
+/* nord */
+.theme-nord {
+    --bg:        #2e3440;
+    --surface:   #3b4252;
+    --border:    #434c5e;
+    --text:      #eceff4;
+    --muted:     #9199a5;
+    --accent:    #88c0d0;
+    --link:      #88c0d0;
+    --btn-bg:    #88c0d0;
+    --btn-text:  #2e3440;
+    --navbar-bg: rgba(46,52,64,0.9);
+    --card: var(--surface);
+}
+
+/* dracula */
+.theme-dracula {
+    --bg:        #282a36;
+    --surface:   #21222c;
+    --border:    #343746;
+    --text:      #f8f8f2;
+    --muted:     #6272a4;
+    --accent:    #bd93f9;
+    --link:      #bd93f9;
+    --btn-bg:    #bd93f9;
+    --btn-text:  #282a36;
+    --navbar-bg: rgba(33,34,44,0.9);
+    --card: var(--surface);
+}
+
+/* rose pine */
+.theme-rose-pine {
+    --bg:        #191724;
+    --surface:   #1f1d2e;
+    --border:    #26233a;
+    --text:      #e0def4;
+    --muted:     #6e6a86;
+    --accent:    #ebbcba;
+    --link:      #ebbcba;
+    --btn-bg:    #ebbcba;
+    --btn-text:  #191724;
+    --navbar-bg: rgba(25,23,36,0.9);
+    --card: var(--surface);
+}
+
+/* catppuccin mocha */
+.theme-catppuccin {
+    --bg:        #1e1e2e;
+    --surface:   #181825;
+    --border:    #313244;
+    --text:      #cdd6f4;
+    --muted:     #6c7086;
+    --accent:    #cba6f7;
+    --link:      #cba6f7;
+    --btn-bg:    #cba6f7;
+    --btn-text:  #1e1e2e;
+    --navbar-bg: rgba(24,24,37,0.9);
+    --card: var(--surface);
+}
+
+/* =====================================================
+   Base styles using variables
+   ===================================================== */
+
 body {
     background: var(--bg);
     color: var(--text);
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    margin: 0; /* ✅ instead of 16px */
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+    transition: background 0.2s ease, color 0.2s ease;
 }
 
 a { color: var(--link); }
@@ -39,7 +132,7 @@ a { color: var(--link); }
 hr { border: none; border-top: 1px solid var(--border); }
 
 input, select, textarea {
-    background: var(--card);
+    background: var(--surface);
     color: var(--text);
     border: 1px solid var(--border);
     padding: 8px;
@@ -56,6 +149,6 @@ button {
 }
 
 details > div {
-    background: var(--card);
+    background: var(--surface);
     border: 1px solid var(--border);
 }

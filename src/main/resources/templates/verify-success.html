@@ -3,22 +3,38 @@
 <head th:replace="~{fragments/head-auth :: headAuth('Email verified', null)}"></head>
 
 <body class="auth">
-<div class="box">
-    <h1>Email verified</h1>
+<canvas id="particles"></canvas>
 
-    <p class="success">
-        ✅ Your email has been verified successfully.
-    </p>
+<div class="auth-shell">
 
-    <p class="muted">
-        You can close this tab and go back to the app.
-    </p>
+    <div class="auth-brand">
+        <a class="auth-logo" th:href="@{/}">internship tracker</a>
+        <p class="auth-tagline">Track every<br>application.</p>
+        <ul class="auth-features">
+            <li>Filter by status and search by company</li>
+            <li>Works without an account</li>
+            <li>Simple, private, free</li>
+        </ul>
+    </div>
 
-<!--    <div style="margin-top:16px;">-->
-<!--        <a th:href="@{/login}">Go to login</a>-->
-<!--        <span class="muted"> · </span>-->
-<!--        <a th:href="@{/apps}">Go to applications</a>-->
-<!--    </div>-->
+    <div class="auth-card">
+        <div class="box">
+            <h1>Email verified</h1>
+
+            <p class="success">
+                Your email has been verified successfully.
+            </p>
+
+            <p class="muted">
+                You can close this tab and go back to the app.
+            </p>
+
+            <a class="btn-link" style="margin-top:16px;" th:href="@{/login}">Go to login</a>
+        </div>
+    </div>
+
 </div>
+
+<footer class="auth-footer">simple &middot; private &middot; free</footer>
 </body>
 </html>

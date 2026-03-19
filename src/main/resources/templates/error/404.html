@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Not Found</title>
-</head>
-<body>
-<h2>Not found</h2>
-<p>The page you’re looking for doesn’t exist.</p>
-<p><a href="/apps">Back to applications</a></p>
+<head th:replace="~{fragments/head-auth :: headAuth('Not Found', null)}"></head>
+<body class="auth">
+<div class="box">
+    <h1>Not found</h1>
+    <p>The page you're looking for doesn't exist.</p>
+    <a class="btn-link" th:href="@{/apps}">Back to applications</a>
+</div>
 </body>
 </html>
