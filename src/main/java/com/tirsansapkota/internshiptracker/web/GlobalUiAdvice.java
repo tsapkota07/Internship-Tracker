@@ -2,6 +2,7 @@ package com.tirsansapkota.internshiptracker.web;
 
 import com.tirsansapkota.internshiptracker.model.AppUser;
 import com.tirsansapkota.internshiptracker.model.Theme;
+import com.tirsansapkota.internshiptracker.repository.UserRepository;
 import com.tirsansapkota.internshiptracker.service.GuestApplicationStore;
 import com.tirsansapkota.internshiptracker.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -27,10 +28,19 @@ public class GlobalUiAdvice {
 
     private final UserService userService;
     private final GuestApplicationStore guestStore;
+    private final UserRepository userRepository;
 
-    public GlobalUiAdvice(UserService userService, GuestApplicationStore guestStore) {
+    public GlobalUiAdvice(UserService userService, GuestApplicationStore guestStore, UserRepository userRepository) {
         this.userService = userService;
         this.guestStore = guestStore;
+        this.userRepository = userRepository;
+    }
+
+    @ModelAttribute("contactEmail")
+    public String contactEmail() {
+        return userRepository.findFirstByRole("DEV")
+                .map(AppUser::getEmail)
+                .orElse("");
     }
 
     @ModelAttribute("demoUser")
@@ -39,6 +49,15 @@ public class GlobalUiAdvice {
             return userService.getCurrentUser().isDemoUser();
         } catch (Exception e) {
             return false; // guest / not logged in
+        }
+    }
+
+    @ModelAttribute("devUser")
+    public boolean devUser() {
+        try {
+            return "DEV".equals(userService.getCurrentUser().getRole());
+        } catch (Exception e) {
+            return false;
         }
     }
 

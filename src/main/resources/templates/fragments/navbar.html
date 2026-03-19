@@ -49,6 +49,15 @@
                             Email Setup
                         </a>
 
+                        <!-- Dev Settings (only for DEV role) -->
+                        <th:block th:if="${devUser}">
+                            <div class="divider"></div>
+                            <a th:href="@{/dev/users}" role="menuitem" class="dev-link">
+                                <i class="fa-solid fa-screwdriver-wrench" style="font-size:0.8rem; margin-right:4px;"></i>
+                                Dev Settings
+                            </a>
+                        </th:block>
+
                         <div class="divider"></div>
 
                         <a href="#" class="danger" role="menuitem" onclick="openLogoutModal(); return false;">

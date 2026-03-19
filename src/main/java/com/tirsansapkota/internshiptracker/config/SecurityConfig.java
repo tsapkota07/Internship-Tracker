@@ -34,6 +34,7 @@ public class SecurityConfig {
                         "/reset-password",
 
                         "/logout-success",
+                        "/contact",
 
                         // email verification links from emails
                         "/account/verify-email/**"
@@ -52,6 +53,11 @@ public class SecurityConfig {
                         "/apps/{id}/edit",
                         "/apps/{id}/delete"
                 ).permitAll()
+
+                // ---------------------------
+                // DEV ONLY
+                // ---------------------------
+                .requestMatchers("/dev/**").hasRole("DEV")
 
                 // ---------------------------
                 // AUTHENTICATED ONLY

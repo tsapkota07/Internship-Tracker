@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Contact', '/css/contact.css')}"></head>
+
+<body th:class="${themeClass}">
+<div class="app-shell">
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="page page-sm stack">
+
+    <div class="page-header">
+        <div>
+            <h2 class="title">Contact</h2>
+            <p class="subtitle">Send a message and we'll get back to you.</p>
+        </div>
+        <a class="btn ghost" th:href="@{/apps}">← Back</a>
+    </div>
+
+    <!-- Success -->
+    <section th:if="${contactSuccess}" class="card success-card">
+        <div class="success-icon">✓</div>
+        <div class="success-title">Message sent!</div>
+        <div class="success-sub">Thanks for reaching out. We'll get back to you soon.</div>
+        <a class="btn primary" th:href="@{/apps}" style="margin-top:16px;">Back to Apps</a>
+    </section>
+
+    <!-- Form -->
+    <section th:unless="${contactSuccess}" class="card">
+        <div th:if="${contactError}" class="banner error" style="margin-bottom:18px;">
+            <span th:text="${contactError}"></span>
+        </div>
+
+        <form method="post" th:action="@{/contact}" class="stack-sm">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+            <div class="field">
+                <label for="name">Name</label>
+                <input id="name"
+                       class="input"
+                       type="text"
+                       name="name"
+                       th:value="${prevName}"
+                       placeholder="Your name"
+                       required />
+            </div>
+
+            <div class="field">
+                <label for="email">Email</label>
+                <input id="email"
+                       class="input"
+                       type="email"
+                       name="email"
+                       th:value="${prevEmail}"
+                       placeholder="you@example.com"
+                       required />
+                <p class="field-hint">We'll reply to this address.</p>
+            </div>
+
+            <div class="field">
+                <label for="message">Message</label>
+                <textarea id="message"
+                          class="input textarea"
+                          name="message"
+                          rows="6"
+                          placeholder="What's on your mind?"
+                          required
+                          th:text="${prevMessage}"></textarea>
+            </div>
+
+            <div class="actions">
+                <button class="btn primary" type="submit">Send Message</button>
+            </div>
+        </form>
+    </section>
+
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</div>
+</body>
+</html>

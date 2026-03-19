@@ -1,0 +1,153 @@
+.page {
+    max-width: 1100px;
+    margin: 28px auto;
+    padding: 0 16px 40px;
+}
+
+.page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.title  { margin: 0; font-size: 1.7rem; letter-spacing: -0.02em; }
+.subtitle { margin: 6px 0 0; opacity: 0.75; font-size: 0.9rem; }
+
+.card {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface);
+    padding: 20px;
+    overflow-x: auto;
+}
+
+/* ---- banners ---- */
+.banner {
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+.banner.success { background: var(--good-bg, #d1fae5); color: var(--good-fg, #065f46); border: 1px solid var(--good-border, #6ee7b7); }
+.banner.error   { background: var(--bad-bg,  #fee2e2); color: var(--bad-fg,  #991b1b); border: 1px solid var(--bad-border,  #fca5a5); }
+.banner.info    { background: var(--info-bg, #dbeafe); color: var(--info-fg, #1e40af); border: 1px solid var(--info-border, #93c5fd); }
+
+/* ---- table ---- */
+.dev-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.dev-table th,
+.dev-table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+}
+
+.dev-table th {
+    font-weight: 600;
+    opacity: 0.6;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.dev-table tr:last-child td { border-bottom: none; }
+
+.dev-table tr.self-row td { opacity: 0.55; }
+
+.col-id       { width: 48px; }
+.col-username { min-width: 120px; }
+.col-email    { min-width: 180px; }
+.col-verified { width: 80px; }
+.col-tags     { min-width: 110px; }
+.col-actions  { min-width: 240px; }
+
+.muted { opacity: 0.45; }
+
+/* ---- pill badges ---- */
+.pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+.pill.good    { background: var(--good-bg,  #d1fae5); color: var(--good-fg,  #065f46); }
+.pill.neutral { background: var(--border);             color: var(--text); opacity: 0.7; }
+.pill.role    { background: var(--info-bg,  #dbeafe); color: var(--info-fg, #1e40af); }
+.pill.you     { background: var(--accent);             color: #fff; margin-left: 4px; }
+
+/* ---- action buttons ---- */
+.btn-sm {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid transparent;
+    text-decoration: none;
+    line-height: 1.4;
+    background: none;
+    font-family: inherit;
+}
+.btn-sm + .btn-sm,
+.btn-sm + form,
+form + .btn-sm,
+form + form { margin-left: 4px; }
+
+.btn-sm.secondary {
+    border-color: var(--border);
+    color: var(--text);
+    background: var(--surface);
+}
+.btn-sm.secondary:hover { background: var(--hover, rgba(0,0,0,0.05)); }
+
+.btn-sm.ghost {
+    border-color: var(--border);
+    color: var(--text);
+    background: transparent;
+}
+.btn-sm.ghost:hover { background: var(--hover, rgba(0,0,0,0.05)); }
+
+.btn-sm.danger {
+    border-color: var(--bad-border, #fca5a5);
+    color: var(--bad-fg, #991b1b);
+    background: transparent;
+}
+.btn-sm.danger:hover { background: var(--bad-bg, #fee2e2); }
+
+/* ---- shared form styles (change-password page) ---- */
+.field { margin-bottom: 16px; }
+.field label { display: block; font-weight: 500; margin-bottom: 6px; font-size: 0.9rem; }
+.input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.9rem;
+}
+.input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.actions { display: flex; gap: 10px; margin-top: 20px; }
+
+.btn { padding: 9px 18px; border-radius: 8px; font-size: 0.9rem; font-weight: 500;
+       cursor: pointer; border: none; text-decoration: none; font-family: inherit; }
+.btn.primary { background: var(--accent); color: #fff; }
+.btn.primary:hover { opacity: 0.9; }
+.btn.ghost   { background: transparent; border: 1px solid var(--border); color: var(--text); }
+.btn.ghost:hover { background: var(--hover, rgba(0,0,0,0.05)); }
+
+/* ---- dev link in navbar ---- */
+.dev-link { color: var(--accent) !important; font-weight: 600; }
