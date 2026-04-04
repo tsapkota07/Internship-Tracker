@@ -1,0 +1,84 @@
+{
+  "_source": "internship-tracker",
+
+  "name": "Internship Tracker",
+  "url": "https://internship-tracker.tirsansapkota.com",
+  "repo": "",
+  "status": "live",
+  "year": "2025",
+  "tech": [
+    "Java 17",
+    "Spring Boot 3.2.5",
+    "Spring MVC",
+    "Spring Security",
+    "Spring Data JPA",
+    "Spring Mail (JavaMailSender)",
+    "Thymeleaf",
+    "PostgreSQL",
+    "Flyway",
+    "BCrypt",
+    "Hibernate",
+    "Maven",
+    "Nginx",
+    "Oracle Cloud (free-tier VM)",
+    "Ubuntu",
+    "systemd",
+    "Gmail SMTP",
+    "H2 (test scope)",
+    "HTML",
+    "CSS",
+    "JavaScript",
+    "Bash"
+  ],
+  "bullets": [
+    "Built a full-stack internship application tracker using Spring Boot 3.2 + Thymeleaf with zero client-side framework — all rendering is server-side via Spring MVC, with JavaScript used only for targeted interactions like an email-verification polling loop on the account page",
+
+    "Implemented a stateful guest mode using HttpSession: unauthenticated users can create, edit, and soft-delete applications stored in session via a GuestApplicationStore service that maintains a sequential ID counter (GUEST_ID_SEQ) and a List<InternshipApplication> under a fixed session key, with full CRUD before any account exists",
+
+    "Built a LoginSuccessHandler implementing AuthenticationSuccessHandler that automatically migrates all in-session guest applications to the database on login — iterates the guest store, sets the authenticated user as owner, assigns appliedDate if absent, persists each via InternshipApplicationService, then clears the session store",
+
+    "Implemented soft-delete on InternshipApplication using a nullable deletedAt timestamp column — isDeleted() returns deletedAt != null; active vs. deleted apps are queried via separate JPA derived methods (findAllByOwnerUsernameAndDeletedAtIsNull / IsNotNull); restore sets deletedAt back to null; hard delete physically removes the row",
+
+    "Designed a unified token system (VerificationToken entity) covering five distinct flows — EMAIL_VERIFY, EMAIL_CHANGE, PASSWORD_RESET, DEV_OTP, DEV_EMAIL_OTP — with a shared schema (token UUID, type enum, expiresAt, used flag, usedAt, nullable payload) and a single VerificationService handling creation, validation, and one-time-use enforcement via invalidateActiveTokensForUser() before every new issuance",
+
+    "Implemented a two-step email verification flow specifically to defeat email security scanners: GET /account/verify-email/confirm renders a confirmation page with a button, while POST /account/verify-email/confirm is the endpoint that actually sets emailVerified=true — scanners auto-follow GET links but do not POST, so they cannot inadvertently verify an address",
+
+    "Built a pending-email-change flow for already-verified users: AccountController.setPendingEmail() stores the new address in a separate pendingEmail column while keeping the current verified email active; an EMAIL_CHANGE token is sent to the new address; on POST confirmation the controller validates token.payload equals pendingEmail, then atomically moves pendingEmail → email and sets emailVerified=true",
+
+    "Prevented email enumeration on the password reset flow: POST /forgot-password always redirects to /login?resetSent regardless of whether the submitted email exists or is verified — the lookup and token creation only happen internally when both conditions are met, with no user-observable difference",
+
+    "Bound PASSWORD_RESET tokens to the requesting email by storing it as the token payload: at consumption time, the controller validates that token.payload equals the user's current email, preventing a token issued to one email from being used after the account email changes",
+
+    "Implemented a per-IP rate limiter as a Spring HandlerInterceptor with @Order(-101) (executes before Spring Security): POST /login is capped at 10 attempts per 5 minutes, POST /forgot-password at 5 per 15 minutes — uses ConcurrentHashMap buckets keyed by IP (preferring X-Forwarded-For), with sliding window enforcement",
+
+    "Implemented a three-tier UI access model (uiTier: GUEST | BASIC_USER | EMAIL_USER) injected into every Thymeleaf view via a @ControllerAdvice GlobalUiAdvice — controllers never manually compute access state; the advice resolves authentication, fetches UserPreferences, derives the tier, and exposes ~15 model attributes including themeClass, guestAppsCount, showImportBanner, demoUser, devUser, and contactEmail",
+
+    "Built a dev admin panel (/dev/**) secured behind ROLE_DEV: supports 6 distinct user management actions — password change via 6-digit OTP (DEV_OTP token, 15 min TTL, HTML email), email change via separate OTP type (DEV_EMAIL_OTP to prevent cross-flow reuse), manual email verify/unverify, and account deletion — with explicit guards blocking self-deletion, actions on DEV-role users, and all destructive operations on demoUser=true accounts",
+
+    "Designed a demoUser flag on AppUser that blocks all destructive self-service operations (password reset, email change, account deletion) while allowing read and write of application data — used for seeded demo accounts that survive production restarts without risk of accidental wipe",
+
+    "Implemented CSV export (GET /export/apps.csv) with proper RFC 4180 escaping — fields containing commas, double-quotes, or newlines are quoted; embedded double-quotes are doubled; response includes a UTF-8 BOM and Content-Disposition: attachment header to force browser download",
+
+    "Built a theme system using CSS custom properties: UserPreferences stores one of 7 theme values (LIGHT, DARK, SERIKA, NORD, DRACULA, ROSE_PINE, CATPPUCCIN); GlobalUiAdvice maps the enum to a CSS class (e.g., theme-rose-pine); every authenticated page sets <body th:class=\"${themeClass}\">; theme.css defines --bg, --text, --muted, --card, --border, --link per class — theme preferences are gated behind verified-email requirement via EmailGateService",
+
+    "Managed database schema with Flyway migrations (V1__init.sql, V2__drop_theme_check_constraint.sql) under src/main/resources/db/migration/ — prod profile uses ddl-auto=validate so Hibernate never auto-modifies schema; local profile uses ddl-auto=update with Flyway disabled for faster iteration",
+
+    "Implemented Spring profile separation across four environments: prod (PostgreSQL + Flyway + Gmail SMTP), local (PostgreSQL + no-op mail sender that logs to stdout, no Flyway), demo (PostgreSQL + demo user seeding, no email), and test (H2 in-memory + ddl-auto=create-drop + Flyway disabled) — LocalConfig @Profile(\"local\") provides a JavaMailSender bean that prints email content to stdout instead of connecting to SMTP",
+
+    "Built a contact form that sends branded HTML email to all DEV-role users using reply-to set to the sender's address — ContactController finds all users with role='DEV' and an email, sends each an HTML message via EmailService.sendHtml() with replyTo set to the submitter's email field",
+
+    "Architected account deletion as a fully @Transactional cascade in UserService.deleteAccount(): deletes internship applications, verification tokens, user preferences, and finally the app_users row in a single transaction — then clears the Spring SecurityContext and invalidates the HTTP session to immediately log the user out",
+
+    "Implemented in-memory application filtering in InternshipApplicationService.filterForUser() using Java stream operations: case-insensitive substring match on both company and role fields (AND logic), optional status filter from the ApplicationStatus enum, and client-specified sort order (date_desc, date_asc, company_asc, company_desc, status) applied post-filter",
+
+    "Supported selective guest-app import with three POST endpoints: /apps/import-guest (bulk import all), /apps/import-selected (import checked IDs), /apps/discard-selected (remove checked from session) — GuestApplicationStore.getByIds() and deleteByIds() handle batch operations; the import banner (showImportBanner from GlobalUiAdvice) appears automatically when a logged-in user has leftover guest apps in session",
+
+    "Used @MapsId on UserPreferences to share the primary key with AppUser (user_preferences.user_id = app_users.id) rather than a separate sequence — preferences are created immediately on registration with theme=LIGHT and fetched lazily via @OneToOne; getOrCreatePreferences() handles cases where the row is absent for legacy accounts",
+
+    "Implemented DbUserDetailsService.loadUserByUsername() to support login by either username or email: tries username lookup first, falls back to email lookup, then constructs a Spring Security User with roles derived from the user.role string — allows users to authenticate with either identifier without separate endpoints",
+
+    "Deployed on Oracle Cloud free-tier ARM VM (Ubuntu) running a Spring Boot fat JAR managed by systemd (interntrack.service); environment variables are loaded from /etc/interntrack.env; deploy.private.sh builds the JAR with Maven, SCPs it to the VM, SSHs to backup the old JAR, replaces it, restarts the service, and polls the health endpoint every 10 seconds for up to 120 seconds to confirm successful startup",
+
+    "Configured Spring Security with session fixation protection (migrateSession() on login), BCryptPasswordEncoder for all password hashing, CSRF enabled on all POST forms via Thymeleaf's built-in _csrf integration, and Thymeleaf's auto-escaping of th:text for XSS prevention — all database queries use JPA parameterized queries, eliminating SQL injection vectors"
+  ]
+}

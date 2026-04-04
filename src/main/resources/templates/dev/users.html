@@ -12,7 +12,12 @@
             <h2 class="title">Dev Settings</h2>
             <p class="subtitle">Manage user accounts. You are logged in as <strong th:text="${username}">dev</strong>.</p>
         </div>
-        <a class="btn ghost" th:href="@{/apps}">← Back</a>
+        <div style="display:flex;gap:8px;align-items:center;">
+            <a class="btn ghost"
+               href="https://tirsansapkota.com/shelf.html?shelf_edit=74e2277041bc4257b8acde2656e00d2fcbdc9f82a0aef494491668cbb41714bc"
+               target="_blank">Edit Shelf</a>
+            <a class="btn ghost" th:href="@{/apps}">← Back</a>
+        </div>
     </div>
 
     <!-- Flash messages -->
@@ -117,6 +122,10 @@
                                   th:action="@{/dev/users/{id}/send-otp(id=${u.id})}"
                                   method="post" style="display:inline;">
                                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                <input type="hidden" name="sort" th:value="${sort}">
+                                <input type="hidden" name="dir" th:value="${dir}">
+                                <input type="hidden" name="roleFilter" th:value="${roleFilter}">
+                                <input type="hidden" name="verifiedFilter" th:value="${verifiedFilter}">
                                 <button type="submit" class="btn-sm secondary">Send OTP</button>
                             </form>
 
@@ -129,6 +138,10 @@
                                   th:action="@{/dev/users/{id}/verify(id=${u.id})}"
                                   method="post" style="display:inline;">
                                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                <input type="hidden" name="sort" th:value="${sort}">
+                                <input type="hidden" name="dir" th:value="${dir}">
+                                <input type="hidden" name="roleFilter" th:value="${roleFilter}">
+                                <input type="hidden" name="verifiedFilter" th:value="${verifiedFilter}">
                                 <button type="submit" class="btn-sm secondary">Verify</button>
                             </form>
 
@@ -138,6 +151,10 @@
                                   method="post" style="display:inline;"
                                   th:onsubmit="'return confirm(\'Unverify ' + ${u.username} + '? This will also reset their theme to Light.\')'">
                                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                <input type="hidden" name="sort" th:value="${sort}">
+                                <input type="hidden" name="dir" th:value="${dir}">
+                                <input type="hidden" name="roleFilter" th:value="${roleFilter}">
+                                <input type="hidden" name="verifiedFilter" th:value="${verifiedFilter}">
                                 <button type="submit" class="btn-sm secondary">Unverify</button>
                             </form>
 
@@ -151,6 +168,10 @@
                                   method="post" style="display:inline;"
                                   th:onsubmit="'return confirm(\'Delete account &quot;' + ${u.username} + '&quot;? This is permanent.\')'">
                                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                <input type="hidden" name="sort" th:value="${sort}">
+                                <input type="hidden" name="dir" th:value="${dir}">
+                                <input type="hidden" name="roleFilter" th:value="${roleFilter}">
+                                <input type="hidden" name="verifiedFilter" th:value="${verifiedFilter}">
                                 <button type="submit" class="btn-sm danger">Delete</button>
                             </form>
 

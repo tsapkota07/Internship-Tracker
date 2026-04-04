@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Import CSV', '/css/apps-form.css')}"></head>
+
+<body th:class="${themeClass}">
+<div class="app-shell">
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="page stack">
+
+    <!-- Breadcrumbs -->
+    <div th:if="${breadcrumbs != null}"
+         th:replace="~{fragments/breadcrumb :: breadcrumb(${breadcrumbs})}">
+    </div>
+
+    <section class="page-header">
+        <div>
+            <h2 class="title">Import CSV</h2>
+            <p class="subtitle">Upload a CSV file to import applications.</p>
+        </div>
+        <a class="btn ghost" th:href="@{/apps}">← Back</a>
+    </section>
+
+    <!-- Flash messages -->
+    <div th:if="${error}" class="card banner warn" role="alert">
+        <div class="banner-title" th:text="${error}"></div>
+    </div>
+    <div th:if="${warn}" class="card banner warn" role="alert">
+        <div class="banner-title" th:text="${warn}"></div>
+    </div>
+
+    <section class="card">
+        <form method="post" th:action="@{/apps/import-csv}" enctype="multipart/form-data">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+            <div class="field">
+                <label for="file">CSV File</label>
+                <input id="file" type="file" name="file" accept=".csv" />
+            </div>
+
+            <div class="muted" style="margin-top: 8px; font-size: 0.85rem;">
+                Expected columns: <code>company, role, status, appliedDate, location, url, description</code><br>
+                Only <strong>company</strong> and <strong>role</strong> are required.
+                Status must be one of: <code>APPLIED</code>, <code>INTERVIEW</code>, <code>OFFER</code>, <code>REJECTED</code>.
+                Date format: <code>YYYY-MM-DD</code>.
+            </div>
+
+            <div class="actions" style="margin-top: 16px;">
+                <a class="btn ghost" th:href="@{/apps}">Cancel</a>
+                <button class="btn primary" type="submit">Upload</button>
+            </div>
+        </form>
+    </section>
+
+</main>
+</div>
+</body>
+</html>

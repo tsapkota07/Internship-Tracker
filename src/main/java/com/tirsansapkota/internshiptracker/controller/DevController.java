@@ -47,6 +47,13 @@ public class DevController {
         this.prefsRepo = prefsRepo;
     }
 
+    private String backToUsers(String sort, String dir, String roleFilter, String verifiedFilter) {
+        return "redirect:/dev/users?sort=" + sort
+                + "&dir=" + dir
+                + "&roleFilter=" + roleFilter
+                + "&verifiedFilter=" + verifiedFilter;
+    }
+
     // -------------------------------------------------------
     // GET /dev/users — list all users (with sort + filter)
     // -------------------------------------------------------
@@ -96,20 +103,25 @@ public class DevController {
     // POST /dev/users/{id}/delete
     // -------------------------------------------------------
     @PostMapping("/users/{id}/delete")
-    public String deleteUser(@PathVariable Long id, RedirectAttributes ra) {
+    public String deleteUser(@PathVariable Long id,
+                             @RequestParam(defaultValue = "id")  String sort,
+                             @RequestParam(defaultValue = "asc") String dir,
+                             @RequestParam(defaultValue = "all") String roleFilter,
+                             @RequestParam(defaultValue = "all") String verifiedFilter,
+                             RedirectAttributes ra) {
         AppUser self = userService.getCurrentUser();
         if (self.getId().equals(id)) {
             ra.addFlashAttribute("error", "You cannot delete your own account from Dev Settings.");
-            return "redirect:/dev/users";
+            return backToUsers(sort, dir, roleFilter, verifiedFilter);
         }
         AppUser target = users.findById(id).orElse(null);
         if (target == null) {
             ra.addFlashAttribute("error", "User not found.");
-            return "redirect:/dev/users";
+            return backToUsers(sort, dir, roleFilter, verifiedFilter);
         }
         userService.deleteAccount(target.getUsername());
         ra.addFlashAttribute("success", "Account \"" + target.getUsername() + "\" deleted.");
-        return "redirect:/dev/users";
+        return backToUsers(sort, dir, roleFilter, verifiedFilter);
     }
 
     // -------------------------------------------------------
@@ -117,20 +129,25 @@ public class DevController {
     //   — not allowed for demo users
     // -------------------------------------------------------
     @PostMapping("/users/{id}/send-otp")
-    public String sendOtp(@PathVariable Long id, RedirectAttributes ra) {
+    public String sendOtp(@PathVariable Long id,
+                          @RequestParam(defaultValue = "id")  String sort,
+                          @RequestParam(defaultValue = "asc") String dir,
+                          @RequestParam(defaultValue = "all") String roleFilter,
+                          @RequestParam(defaultValue = "all") String verifiedFilter,
+                          RedirectAttributes ra) {
         AppUser target = users.findById(id).orElse(null);
         if (target == null) {
             ra.addFlashAttribute("error", "User not found.");
-            return "redirect:/dev/users";
+            return backToUsers(sort, dir, roleFilter, verifiedFilter);
         }
         if (target.isDemoUser()) {
             ra.addFlashAttribute("error", "Cannot send OTP to demo users.");
-            return "redirect:/dev/users";
+            return backToUsers(sort, dir, roleFilter, verifiedFilter);
         }
         if (target.getEmail() == null || target.getEmail().isBlank()) {
             ra.addFlashAttribute("error",
                     "Cannot send OTP: \"" + target.getUsername() + "\" has no email on file.");
-            return "redirect:/dev/users";
+            return backToUsers(sort, dir, roleFilter, verifiedFilter);
         }
 
         verificationService.invalidateActiveTokensForUser(target, TokenType.DEV_OTP);
@@ -175,12 +192,12 @@ public class DevController {
             );
         } catch (Exception e) {
             ra.addFlashAttribute("error", "Failed to send OTP email: " + e.getMessage());
-            return "redirect:/dev/users";
+            return backToUsers(sort, dir, roleFilter, verifiedFilter);
         }
 
         ra.addFlashAttribute("otpSentFor", id);
         ra.addFlashAttribute("otpSentUsername", target.getUsername());
-        return "redirect:/dev/users";
+        return backToUsers(sort, dir, roleFilter, verifiedFilter);
     }
 
     // -------------------------------------------------------
@@ -244,25 +261,30 @@ public class DevController {
     //   — resets theme to Light
     // -------------------------------------------------------
     @PostMapping("/users/{id}/unverify")
-    public String unverifyUser(@PathVariable Long id, RedirectAttributes ra) {
+    public String unverifyUser(@PathVariable Long id,
+                               @RequestParam(defaultValue = "id")  String sort,
+                               @RequestParam(defaultValue = "asc") String dir,
+                               @RequestParam(defaultValue = "all") String roleFilter,
+                               @RequestParam(defaultValue = "all") String verifiedFilter,
+                               RedirectAttributes ra) {
         AppUser self = userService.getCurrentUser();
         if (self.getId().equals(id)) {
             ra.addFlashAttribute("error", "Cannot change your own verification status.");
-            return "redirect:/dev/users";
+            return backToUsers(sort, dir, roleFilter, verifiedFilter);
         }
         AppUser target = users.findById(id).orElse(null);
         if (target == null) {
             ra.addFlashAttribute("error", "User not found.");
-            return "redirect:/dev/users";
+            return backToUsers(sort, dir, roleFilter, verifiedFilter);
         }
         if ("DEV".equals(target.getRole())) {
             ra.addFlashAttribute("error", "Cannot change verification status of a dev user.");
-            return "redirect:/dev/users";
+            return backToUsers(sort, dir, roleFilter, verifiedFilter);
         }
         if (!target.isEmailVerified()) {
             ra.addFlashAttribute("error",
                     "\"" + target.getUsername() + "\"'s email is already unverified.");
-            return "redirect:/dev/users";
+            return backToUsers(sort, dir, roleFilter, verifiedFilter);
         }
 
         target.setEmailVerified(false);
@@ -278,7 +300,7 @@ public class DevController {
 
         ra.addFlashAttribute("success",
                 "\"" + target.getUsername() + "\" unverified and theme reset to Light.");
-        return "redirect:/dev/users";
+        return backToUsers(sort, dir, roleFilter, verifiedFilter);
     }
 
     // -------------------------------------------------------
@@ -286,24 +308,29 @@ public class DevController {
     //   — demo users only
     // -------------------------------------------------------
     @PostMapping("/users/{id}/verify")
-    public String verifyUser(@PathVariable Long id, RedirectAttributes ra) {
+    public String verifyUser(@PathVariable Long id,
+                             @RequestParam(defaultValue = "id")  String sort,
+                             @RequestParam(defaultValue = "asc") String dir,
+                             @RequestParam(defaultValue = "all") String roleFilter,
+                             @RequestParam(defaultValue = "all") String verifiedFilter,
+                             RedirectAttributes ra) {
         AppUser target = users.findById(id).orElse(null);
         if (target == null) {
             ra.addFlashAttribute("error", "User not found.");
-            return "redirect:/dev/users";
+            return backToUsers(sort, dir, roleFilter, verifiedFilter);
         }
         if (!target.isDemoUser()) {
             ra.addFlashAttribute("error", "Manual verification is only allowed for demo users.");
-            return "redirect:/dev/users";
+            return backToUsers(sort, dir, roleFilter, verifiedFilter);
         }
         if (target.getEmail() == null || target.getEmail().isBlank()) {
             ra.addFlashAttribute("error", "User has no email to verify.");
-            return "redirect:/dev/users";
+            return backToUsers(sort, dir, roleFilter, verifiedFilter);
         }
         if (target.isEmailVerified()) {
             ra.addFlashAttribute("error",
                     "\"" + target.getUsername() + "\"'s email is already verified.");
-            return "redirect:/dev/users";
+            return backToUsers(sort, dir, roleFilter, verifiedFilter);
         }
 
         target.setEmailVerified(true);
@@ -311,7 +338,7 @@ public class DevController {
 
         ra.addFlashAttribute("success",
                 "\"" + target.getUsername() + "\" marked as verified.");
-        return "redirect:/dev/users";
+        return backToUsers(sort, dir, roleFilter, verifiedFilter);
     }
 
     // -------------------------------------------------------

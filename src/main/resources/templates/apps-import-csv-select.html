@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Import CSV — Select', '/css/apps-bulk.css')}"></head>
+
+<body th:class="${themeClass}">
+<div class="app-shell">
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="page stack">
+
+    <!-- Breadcrumbs -->
+    <div th:if="${breadcrumbs != null}"
+         th:replace="~{fragments/breadcrumb :: breadcrumb(${breadcrumbs})}">
+    </div>
+
+    <section class="page-header">
+        <div>
+            <h2 class="title">Import CSV</h2>
+            <p class="subtitle">Choose which rows to import into your account.</p>
+        </div>
+        <a class="btn ghost" th:href="@{/apps}">← Back</a>
+    </section>
+
+    <!-- Flash messages -->
+    <div th:if="${warn}" class="card banner warn" role="alert">
+        <div class="banner-title" th:text="${warn}"></div>
+    </div>
+
+    <!-- Empty state -->
+    <section class="card empty" th:if="${csvAppsCount == 0}">
+        <div class="empty-title">No rows to import</div>
+        <div class="empty-sub">Upload a CSV file to get started.</div>
+        <div style="margin-top:12px;">
+            <a class="btn primary" th:href="@{/apps/import-csv}">Upload CSV</a>
+        </div>
+    </section>
+
+    <!-- Bulk selection -->
+    <section class="card" th:if="${csvAppsCount > 0}">
+        <form class="bulk-form" method="post" th:action="@{/apps/import-csv/import-selected}">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+            <div class="hint">
+                Select the rows you want to import.
+            </div>
+
+            <div class="list">
+                <label class="check-row" th:each="app : ${csvApps}">
+                    <input class="check" type="checkbox" name="ids" th:value="${app.id}" checked>
+                    <div class="check-main">
+                        <div class="row-title">
+                            <span th:text="${app.company}">Company</span>
+                            <span class="status-pill" th:text="${app.status}">APPLIED</span>
+                        </div>
+                        <div class="row-sub">
+                            <span th:text="${app.role}">Role</span>
+                            <span th:if="${app.location != null and !app.location.isBlank()}"
+                                  th:text="'· ' + ${app.location}"></span>
+                        </div>
+                    </div>
+                </label>
+            </div>
+
+            <div class="bulk-actions">
+                <button class="btn primary"
+                        th:formaction="@{/apps/import-csv/import-selected}"
+                        formmethod="post"
+                        type="submit">
+                    Import Selected
+                </button>
+
+                <button class="btn danger"
+                        th:formaction="@{/apps/import-csv/discard}"
+                        formmethod="post"
+                        type="submit">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </section>
+
+</main>
+
+<script>
+    document.addEventListener("mousedown", (e) => {
+        if (e.target.closest(".check-row")) e.preventDefault();
+    });
+</script>
+</div>
+</body>
+</html>

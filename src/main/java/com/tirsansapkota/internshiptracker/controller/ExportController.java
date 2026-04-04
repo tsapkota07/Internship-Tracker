@@ -56,7 +56,7 @@ public class ExportController {
             // BOM helps Excel interpret UTF-8 properly
             out.write('\uFEFF');
 
-            out.println("company,role,status,appliedDate,location,link,notes");
+            out.println("company,role,status,appliedDate,location,url,description");
 
             DateTimeFormatter dateFmt = DateTimeFormatter.ISO_LOCAL_DATE;
 

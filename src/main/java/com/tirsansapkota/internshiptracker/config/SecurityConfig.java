@@ -65,6 +65,8 @@ public class SecurityConfig {
                 .requestMatchers(
                         "/apps/deleted",
                         "/apps/import-guest",
+                        "/apps/import-csv",
+                        "/apps/import-csv/**",
                         "/account/**",
                         "/preferences",
                         "/export",
